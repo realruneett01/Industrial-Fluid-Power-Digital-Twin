@@ -1,0 +1,377 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 420" width="100%" height="100%">
+  <title>2,205 real test-stand cycles - what the twin learns to diagnose</title>
+  <desc>Condition timeline showing degradation lanes across test bench cycles.</desc>
+  <style>
+    text { font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; }
+    @keyframes pulse-glow { 0%, 100% { opacity: 0.25; } 50% { opacity: 0.65; } }
+    .cursor-glow { animation: pulse-glow 2s ease-in-out infinite; }
+    @media (prefers-reduced-motion: reduce) {
+      * { animation: none !important; }
+      animate, animateTransform { dur: 0s !important; repeatCount: 0 !important; }
+    }
+  </style>
+  <rect width="960" height="420" rx="12" fill="#0b1220" />
+  <text x="36" y="44" fill="#e2e8f0" font-size="18" font-weight="600">2,205 real test-stand cycles - what the twin learns to diagnose</text>
+  <text x="36" y="66" fill="#94a3b8" font-size="12">ZeMA hydraulic test bench · Multi-component physical wear · Real-time digital twin monitoring</text>
+  <circle cx="620" cy="40" r="4" fill="#22c55e" />
+  <text x="629" y="44" fill="#94a3b8" font-size="11">Healthy</text>
+  <circle cx="700" cy="40" r="4" fill="#f59e0b" />
+  <text x="709" y="44" fill="#94a3b8" font-size="11">Warning</text>
+  <circle cx="780" cy="40" r="4" fill="#ef4444" />
+  <text x="789" y="44" fill="#94a3b8" font-size="11">Fault</text>
+  <circle cx="860" cy="40" r="4" fill="#22d3ee" />
+  <text x="869" y="44" fill="#94a3b8" font-size="11">Twin Scan</text>
+  <text x="36" y="111" fill="#e2e8f0" font-size="13" font-weight="600">Cooler</text>
+  <text x="36" y="121" fill="#64748b" font-size="9">efficiency %</text>
+  <rect class="lane-track" x="175" y="92" width="745" height="32" rx="3" fill="#111a2e" />
+  <rect class="condition-block" x="175.00" y="92" width="247.32" height="32" fill="#ef4444" />
+  <rect class="condition-block" x="422.32" y="92" width="247.32" height="32" fill="#f59e0b" />
+  <rect class="condition-block" x="669.64" y="92" width="250.36" height="32" fill="#22c55e" />
+  <text x="36" y="153" fill="#e2e8f0" font-size="13" font-weight="600">Valve</text>
+  <text x="36" y="163" fill="#64748b" font-size="9">switching %</text>
+  <rect class="lane-track" x="175" y="134" width="745" height="32" rx="3" fill="#111a2e" />
+  <rect class="condition-block" x="175.00" y="134" width="71.29" height="32" fill="#22c55e" />
+  <rect class="condition-block" x="246.29" y="134" width="3.38" height="32" fill="#ef4444" />
+  <rect class="condition-block" x="249.67" y="134" width="3.38" height="32" fill="#f97316" />
+  <rect class="condition-block" x="253.05" y="134" width="3.38" height="32" fill="#f59e0b" />
+  <rect class="condition-block" x="256.43" y="134" width="3.72" height="32" fill="#22c55e" />
+  <rect class="condition-block" x="260.14" y="134" width="3.38" height="32" fill="#ef4444" />
+  <rect class="condition-block" x="263.52" y="134" width="3.38" height="32" fill="#f97316" />
+  <rect class="condition-block" x="266.90" y="134" width="3.38" height="32" fill="#f59e0b" />
+  <rect class="condition-block" x="270.28" y="134" width="3.72" height="32" fill="#22c55e" />
+  <rect class="condition-block" x="274.00" y="134" width="3.38" height="32" fill="#ef4444" />
+  <rect class="condition-block" x="277.37" y="134" width="3.38" height="32" fill="#f97316" />
+  <rect class="condition-block" x="280.75" y="134" width="3.38" height="32" fill="#f59e0b" />
+  <rect class="condition-block" x="284.13" y="134" width="7.10" height="32" fill="#22c55e" />
+  <rect class="condition-block" x="291.23" y="134" width="3.38" height="32" fill="#ef4444" />
+  <rect class="condition-block" x="294.61" y="134" width="3.38" height="32" fill="#f97316" />
+  <rect class="condition-block" x="297.98" y="134" width="3.38" height="32" fill="#f59e0b" />
+  <rect class="condition-block" x="301.36" y="134" width="3.72" height="32" fill="#22c55e" />
+  <rect class="condition-block" x="305.08" y="134" width="3.38" height="32" fill="#ef4444" />
+  <rect class="condition-block" x="308.46" y="134" width="3.38" height="32" fill="#f97316" />
+  <rect class="condition-block" x="311.84" y="134" width="3.38" height="32" fill="#f59e0b" />
+  <rect class="condition-block" x="315.22" y="134" width="3.72" height="32" fill="#22c55e" />
+  <rect class="condition-block" x="318.93" y="134" width="3.38" height="32" fill="#ef4444" />
+  <rect class="condition-block" x="322.31" y="134" width="3.38" height="32" fill="#f97316" />
+  <rect class="condition-block" x="325.69" y="134" width="3.38" height="32" fill="#f59e0b" />
+  <rect class="condition-block" x="329.07" y="134" width="7.10" height="32" fill="#22c55e" />
+  <rect class="condition-block" x="336.16" y="134" width="3.38" height="32" fill="#ef4444" />
+  <rect class="condition-block" x="339.54" y="134" width="3.38" height="32" fill="#f97316" />
+  <rect class="condition-block" x="342.92" y="134" width="3.38" height="32" fill="#f59e0b" />
+  <rect class="condition-block" x="346.30" y="134" width="3.72" height="32" fill="#22c55e" />
+  <rect class="condition-block" x="350.02" y="134" width="3.38" height="32" fill="#ef4444" />
+  <rect class="condition-block" x="353.39" y="134" width="3.38" height="32" fill="#f97316" />
+  <rect class="condition-block" x="356.77" y="134" width="3.38" height="32" fill="#f59e0b" />
+  <rect class="condition-block" x="360.15" y="134" width="3.72" height="32" fill="#22c55e" />
+  <rect class="condition-block" x="363.87" y="134" width="3.38" height="32" fill="#ef4444" />
+  <rect class="condition-block" x="367.25" y="134" width="3.38" height="32" fill="#f97316" />
+  <rect class="condition-block" x="370.63" y="134" width="3.38" height="32" fill="#f59e0b" />
+  <rect class="condition-block" x="374.00" y="134" width="7.10" height="32" fill="#22c55e" />
+  <rect class="condition-block" x="381.10" y="134" width="3.38" height="32" fill="#ef4444" />
+  <rect class="condition-block" x="384.48" y="134" width="3.38" height="32" fill="#f97316" />
+  <rect class="condition-block" x="387.86" y="134" width="3.38" height="32" fill="#f59e0b" />
+  <rect class="condition-block" x="391.24" y="134" width="3.72" height="32" fill="#22c55e" />
+  <rect class="condition-block" x="394.95" y="134" width="3.38" height="32" fill="#ef4444" />
+  <rect class="condition-block" x="398.33" y="134" width="3.38" height="32" fill="#f97316" />
+  <rect class="condition-block" x="401.71" y="134" width="3.38" height="32" fill="#f59e0b" />
+  <rect class="condition-block" x="405.09" y="134" width="3.72" height="32" fill="#22c55e" />
+  <rect class="condition-block" x="408.80" y="134" width="3.38" height="32" fill="#ef4444" />
+  <rect class="condition-block" x="412.18" y="134" width="3.38" height="32" fill="#f97316" />
+  <rect class="condition-block" x="415.56" y="134" width="3.38" height="32" fill="#f59e0b" />
+  <rect class="condition-block" x="418.94" y="134" width="74.67" height="32" fill="#22c55e" />
+  <rect class="condition-block" x="493.61" y="134" width="3.38" height="32" fill="#ef4444" />
+  <rect class="condition-block" x="496.99" y="134" width="3.38" height="32" fill="#f97316" />
+  <rect class="condition-block" x="500.37" y="134" width="3.38" height="32" fill="#f59e0b" />
+  <rect class="condition-block" x="503.75" y="134" width="3.72" height="32" fill="#22c55e" />
+  <rect class="condition-block" x="507.46" y="134" width="3.38" height="32" fill="#ef4444" />
+  <rect class="condition-block" x="510.84" y="134" width="3.38" height="32" fill="#f97316" />
+  <rect class="condition-block" x="514.22" y="134" width="3.38" height="32" fill="#f59e0b" />
+  <rect class="condition-block" x="517.60" y="134" width="3.72" height="32" fill="#22c55e" />
+  <rect class="condition-block" x="521.32" y="134" width="3.38" height="32" fill="#ef4444" />
+  <rect class="condition-block" x="524.69" y="134" width="3.38" height="32" fill="#f97316" />
+  <rect class="condition-block" x="528.07" y="134" width="3.38" height="32" fill="#f59e0b" />
+  <rect class="condition-block" x="531.45" y="134" width="7.10" height="32" fill="#22c55e" />
+  <rect class="condition-block" x="538.55" y="134" width="3.38" height="32" fill="#ef4444" />
+  <rect class="condition-block" x="541.93" y="134" width="3.38" height="32" fill="#f97316" />
+  <rect class="condition-block" x="545.30" y="134" width="3.38" height="32" fill="#f59e0b" />
+  <rect class="condition-block" x="548.68" y="134" width="3.72" height="32" fill="#22c55e" />
+  <rect class="condition-block" x="552.40" y="134" width="3.38" height="32" fill="#ef4444" />
+  <rect class="condition-block" x="555.78" y="134" width="3.38" height="32" fill="#f97316" />
+  <rect class="condition-block" x="559.16" y="134" width="3.38" height="32" fill="#f59e0b" />
+  <rect class="condition-block" x="562.54" y="134" width="3.72" height="32" fill="#22c55e" />
+  <rect class="condition-block" x="566.25" y="134" width="3.38" height="32" fill="#ef4444" />
+  <rect class="condition-block" x="569.63" y="134" width="3.38" height="32" fill="#f97316" />
+  <rect class="condition-block" x="573.01" y="134" width="3.38" height="32" fill="#f59e0b" />
+  <rect class="condition-block" x="576.39" y="134" width="7.10" height="32" fill="#22c55e" />
+  <rect class="condition-block" x="583.48" y="134" width="3.38" height="32" fill="#ef4444" />
+  <rect class="condition-block" x="586.86" y="134" width="3.38" height="32" fill="#f97316" />
+  <rect class="condition-block" x="590.24" y="134" width="3.38" height="32" fill="#f59e0b" />
+  <rect class="condition-block" x="593.62" y="134" width="3.72" height="32" fill="#22c55e" />
+  <rect class="condition-block" x="597.34" y="134" width="3.38" height="32" fill="#ef4444" />
+  <rect class="condition-block" x="600.71" y="134" width="3.38" height="32" fill="#f97316" />
+  <rect class="condition-block" x="604.09" y="134" width="3.38" height="32" fill="#f59e0b" />
+  <rect class="condition-block" x="607.47" y="134" width="3.72" height="32" fill="#22c55e" />
+  <rect class="condition-block" x="611.19" y="134" width="3.38" height="32" fill="#ef4444" />
+  <rect class="condition-block" x="614.57" y="134" width="3.38" height="32" fill="#f97316" />
+  <rect class="condition-block" x="617.95" y="134" width="3.38" height="32" fill="#f59e0b" />
+  <rect class="condition-block" x="621.32" y="134" width="7.10" height="32" fill="#22c55e" />
+  <rect class="condition-block" x="628.42" y="134" width="3.38" height="32" fill="#ef4444" />
+  <rect class="condition-block" x="631.80" y="134" width="3.38" height="32" fill="#f97316" />
+  <rect class="condition-block" x="635.18" y="134" width="3.38" height="32" fill="#f59e0b" />
+  <rect class="condition-block" x="638.56" y="134" width="3.72" height="32" fill="#22c55e" />
+  <rect class="condition-block" x="642.27" y="134" width="3.38" height="32" fill="#ef4444" />
+  <rect class="condition-block" x="645.65" y="134" width="3.38" height="32" fill="#f97316" />
+  <rect class="condition-block" x="649.03" y="134" width="3.38" height="32" fill="#f59e0b" />
+  <rect class="condition-block" x="652.41" y="134" width="3.72" height="32" fill="#22c55e" />
+  <rect class="condition-block" x="656.12" y="134" width="3.38" height="32" fill="#ef4444" />
+  <rect class="condition-block" x="659.50" y="134" width="3.38" height="32" fill="#f97316" />
+  <rect class="condition-block" x="662.88" y="134" width="3.38" height="32" fill="#f59e0b" />
+  <rect class="condition-block" x="666.26" y="134" width="74.67" height="32" fill="#22c55e" />
+  <rect class="condition-block" x="740.93" y="134" width="3.38" height="32" fill="#ef4444" />
+  <rect class="condition-block" x="744.31" y="134" width="3.38" height="32" fill="#f97316" />
+  <rect class="condition-block" x="747.69" y="134" width="3.38" height="32" fill="#f59e0b" />
+  <rect class="condition-block" x="751.07" y="134" width="3.72" height="32" fill="#22c55e" />
+  <rect class="condition-block" x="754.78" y="134" width="3.38" height="32" fill="#ef4444" />
+  <rect class="condition-block" x="758.16" y="134" width="3.38" height="32" fill="#f97316" />
+  <rect class="condition-block" x="761.54" y="134" width="3.38" height="32" fill="#f59e0b" />
+  <rect class="condition-block" x="764.92" y="134" width="3.72" height="32" fill="#22c55e" />
+  <rect class="condition-block" x="768.63" y="134" width="3.38" height="32" fill="#ef4444" />
+  <rect class="condition-block" x="772.01" y="134" width="3.38" height="32" fill="#f97316" />
+  <rect class="condition-block" x="775.39" y="134" width="3.38" height="32" fill="#f59e0b" />
+  <rect class="condition-block" x="778.77" y="134" width="7.10" height="32" fill="#22c55e" />
+  <rect class="condition-block" x="785.87" y="134" width="3.38" height="32" fill="#ef4444" />
+  <rect class="condition-block" x="789.24" y="134" width="3.38" height="32" fill="#f97316" />
+  <rect class="condition-block" x="792.62" y="134" width="3.38" height="32" fill="#f59e0b" />
+  <rect class="condition-block" x="796.00" y="134" width="3.72" height="32" fill="#22c55e" />
+  <rect class="condition-block" x="799.72" y="134" width="3.38" height="32" fill="#ef4444" />
+  <rect class="condition-block" x="803.10" y="134" width="3.38" height="32" fill="#f97316" />
+  <rect class="condition-block" x="806.48" y="134" width="3.38" height="32" fill="#f59e0b" />
+  <rect class="condition-block" x="809.85" y="134" width="3.72" height="32" fill="#22c55e" />
+  <rect class="condition-block" x="813.57" y="134" width="3.38" height="32" fill="#ef4444" />
+  <rect class="condition-block" x="816.95" y="134" width="3.38" height="32" fill="#f97316" />
+  <rect class="condition-block" x="820.33" y="134" width="3.38" height="32" fill="#f59e0b" />
+  <rect class="condition-block" x="823.71" y="134" width="7.10" height="32" fill="#22c55e" />
+  <rect class="condition-block" x="830.80" y="134" width="3.38" height="32" fill="#ef4444" />
+  <rect class="condition-block" x="834.18" y="134" width="3.38" height="32" fill="#f97316" />
+  <rect class="condition-block" x="837.56" y="134" width="3.38" height="32" fill="#f59e0b" />
+  <rect class="condition-block" x="840.94" y="134" width="3.72" height="32" fill="#22c55e" />
+  <rect class="condition-block" x="844.66" y="134" width="3.38" height="32" fill="#ef4444" />
+  <rect class="condition-block" x="848.03" y="134" width="3.38" height="32" fill="#f97316" />
+  <rect class="condition-block" x="851.41" y="134" width="3.38" height="32" fill="#f59e0b" />
+  <rect class="condition-block" x="854.79" y="134" width="3.72" height="32" fill="#22c55e" />
+  <rect class="condition-block" x="858.51" y="134" width="3.38" height="32" fill="#ef4444" />
+  <rect class="condition-block" x="861.89" y="134" width="3.38" height="32" fill="#f97316" />
+  <rect class="condition-block" x="865.27" y="134" width="3.38" height="32" fill="#f59e0b" />
+  <rect class="condition-block" x="868.64" y="134" width="7.10" height="32" fill="#22c55e" />
+  <rect class="condition-block" x="875.74" y="134" width="3.38" height="32" fill="#ef4444" />
+  <rect class="condition-block" x="879.12" y="134" width="3.38" height="32" fill="#f97316" />
+  <rect class="condition-block" x="882.50" y="134" width="3.38" height="32" fill="#f59e0b" />
+  <rect class="condition-block" x="885.88" y="134" width="3.72" height="32" fill="#22c55e" />
+  <rect class="condition-block" x="889.59" y="134" width="3.38" height="32" fill="#ef4444" />
+  <rect class="condition-block" x="892.97" y="134" width="3.38" height="32" fill="#f97316" />
+  <rect class="condition-block" x="896.35" y="134" width="3.38" height="32" fill="#f59e0b" />
+  <rect class="condition-block" x="899.73" y="134" width="3.72" height="32" fill="#22c55e" />
+  <rect class="condition-block" x="903.44" y="134" width="3.38" height="32" fill="#ef4444" />
+  <rect class="condition-block" x="906.82" y="134" width="3.38" height="32" fill="#f97316" />
+  <rect class="condition-block" x="910.20" y="134" width="3.38" height="32" fill="#f59e0b" />
+  <rect class="condition-block" x="913.58" y="134" width="6.42" height="32" fill="#22c55e" />
+  <text x="36" y="195" fill="#e2e8f0" font-size="13" font-weight="600">Pump Leakage</text>
+  <text x="36" y="205" fill="#64748b" font-size="9">state 0..2</text>
+  <rect class="lane-track" x="175" y="176" width="745" height="32" rx="3" fill="#111a2e" />
+  <rect class="condition-block" x="175.00" y="176" width="70.95" height="32" fill="#22c55e" />
+  <rect class="condition-block" x="245.95" y="176" width="13.85" height="32" fill="#ef4444" />
+  <rect class="condition-block" x="259.80" y="176" width="13.85" height="32" fill="#f59e0b" />
+  <rect class="condition-block" x="273.66" y="176" width="17.23" height="32" fill="#22c55e" />
+  <rect class="condition-block" x="290.89" y="176" width="13.85" height="32" fill="#ef4444" />
+  <rect class="condition-block" x="304.74" y="176" width="13.85" height="32" fill="#f59e0b" />
+  <rect class="condition-block" x="318.59" y="176" width="17.23" height="32" fill="#22c55e" />
+  <rect class="condition-block" x="335.83" y="176" width="13.85" height="32" fill="#ef4444" />
+  <rect class="condition-block" x="349.68" y="176" width="13.85" height="32" fill="#f59e0b" />
+  <rect class="condition-block" x="363.53" y="176" width="17.23" height="32" fill="#22c55e" />
+  <rect class="condition-block" x="380.76" y="176" width="13.85" height="32" fill="#ef4444" />
+  <rect class="condition-block" x="394.61" y="176" width="13.85" height="32" fill="#f59e0b" />
+  <rect class="condition-block" x="408.47" y="176" width="84.80" height="32" fill="#22c55e" />
+  <rect class="condition-block" x="493.27" y="176" width="13.85" height="32" fill="#ef4444" />
+  <rect class="condition-block" x="507.12" y="176" width="13.85" height="32" fill="#f59e0b" />
+  <rect class="condition-block" x="520.98" y="176" width="17.23" height="32" fill="#22c55e" />
+  <rect class="condition-block" x="538.21" y="176" width="13.85" height="32" fill="#ef4444" />
+  <rect class="condition-block" x="552.06" y="176" width="13.85" height="32" fill="#f59e0b" />
+  <rect class="condition-block" x="565.91" y="176" width="17.23" height="32" fill="#22c55e" />
+  <rect class="condition-block" x="583.15" y="176" width="13.85" height="32" fill="#ef4444" />
+  <rect class="condition-block" x="597.00" y="176" width="13.85" height="32" fill="#f59e0b" />
+  <rect class="condition-block" x="610.85" y="176" width="17.23" height="32" fill="#22c55e" />
+  <rect class="condition-block" x="628.08" y="176" width="13.85" height="32" fill="#ef4444" />
+  <rect class="condition-block" x="641.93" y="176" width="13.85" height="32" fill="#f59e0b" />
+  <rect class="condition-block" x="655.79" y="176" width="84.80" height="32" fill="#22c55e" />
+  <rect class="condition-block" x="740.59" y="176" width="13.85" height="32" fill="#ef4444" />
+  <rect class="condition-block" x="754.44" y="176" width="13.85" height="32" fill="#f59e0b" />
+  <rect class="condition-block" x="768.30" y="176" width="17.23" height="32" fill="#22c55e" />
+  <rect class="condition-block" x="785.53" y="176" width="13.85" height="32" fill="#ef4444" />
+  <rect class="condition-block" x="799.38" y="176" width="13.85" height="32" fill="#f59e0b" />
+  <rect class="condition-block" x="813.23" y="176" width="17.23" height="32" fill="#22c55e" />
+  <rect class="condition-block" x="830.46" y="176" width="13.85" height="32" fill="#ef4444" />
+  <rect class="condition-block" x="844.32" y="176" width="13.85" height="32" fill="#f59e0b" />
+  <rect class="condition-block" x="858.17" y="176" width="17.23" height="32" fill="#22c55e" />
+  <rect class="condition-block" x="875.40" y="176" width="13.85" height="32" fill="#ef4444" />
+  <rect class="condition-block" x="889.25" y="176" width="13.85" height="32" fill="#f59e0b" />
+  <rect class="condition-block" x="903.11" y="176" width="16.89" height="32" fill="#22c55e" />
+  <text x="36" y="237" fill="#e2e8f0" font-size="13" font-weight="600">Accumulator</text>
+  <text x="36" y="247" fill="#64748b" font-size="9">pressure bar</text>
+  <rect class="lane-track" x="175" y="218" width="745" height="32" rx="3" fill="#111a2e" />
+  <rect class="condition-block" x="175.00" y="218" width="112.51" height="32" fill="#22c55e" />
+  <rect class="condition-block" x="287.51" y="218" width="44.94" height="32" fill="#f59e0b" />
+  <rect class="condition-block" x="332.45" y="218" width="44.94" height="32" fill="#f97316" />
+  <rect class="condition-block" x="377.38" y="218" width="112.51" height="32" fill="#ef4444" />
+  <rect class="condition-block" x="489.89" y="218" width="44.94" height="32" fill="#22c55e" />
+  <rect class="condition-block" x="534.83" y="218" width="44.94" height="32" fill="#f59e0b" />
+  <rect class="condition-block" x="579.77" y="218" width="44.94" height="32" fill="#f97316" />
+  <rect class="condition-block" x="624.70" y="218" width="112.51" height="32" fill="#ef4444" />
+  <rect class="condition-block" x="737.21" y="218" width="44.94" height="32" fill="#22c55e" />
+  <rect class="condition-block" x="782.15" y="218" width="44.94" height="32" fill="#f59e0b" />
+  <rect class="condition-block" x="827.09" y="218" width="44.94" height="32" fill="#f97316" />
+  <rect class="condition-block" x="872.02" y="218" width="47.98" height="32" fill="#ef4444" />
+  <text x="36" y="279" fill="#e2e8f0" font-size="13" font-weight="600">Stable Flag</text>
+  <text x="36" y="289" fill="#64748b" font-size="9">0=stable 1=transient</text>
+  <rect class="lane-track" x="175" y="260" width="745" height="14" rx="3" fill="#111a2e" />
+  <rect class="condition-block" x="175.00" y="260" width="71.29" height="14" fill="#ef4444" />
+  <rect class="condition-block" x="246.29" y="260" width="13.51" height="14" fill="#22c55e" />
+  <rect class="condition-block" x="259.80" y="260" width="0.60" height="14" fill="#ef4444" />
+  <rect class="condition-block" x="260.14" y="260" width="13.51" height="14" fill="#22c55e" />
+  <rect class="condition-block" x="273.66" y="260" width="0.60" height="14" fill="#ef4444" />
+  <rect class="condition-block" x="274.00" y="260" width="13.51" height="14" fill="#22c55e" />
+  <rect class="condition-block" x="287.51" y="260" width="3.72" height="14" fill="#ef4444" />
+  <rect class="condition-block" x="291.23" y="260" width="13.51" height="14" fill="#22c55e" />
+  <rect class="condition-block" x="304.74" y="260" width="0.60" height="14" fill="#ef4444" />
+  <rect class="condition-block" x="305.08" y="260" width="13.51" height="14" fill="#22c55e" />
+  <rect class="condition-block" x="318.59" y="260" width="0.60" height="14" fill="#ef4444" />
+  <rect class="condition-block" x="318.93" y="260" width="13.51" height="14" fill="#22c55e" />
+  <rect class="condition-block" x="332.45" y="260" width="3.72" height="14" fill="#ef4444" />
+  <rect class="condition-block" x="336.16" y="260" width="13.51" height="14" fill="#22c55e" />
+  <rect class="condition-block" x="349.68" y="260" width="0.60" height="14" fill="#ef4444" />
+  <rect class="condition-block" x="350.02" y="260" width="13.51" height="14" fill="#22c55e" />
+  <rect class="condition-block" x="363.53" y="260" width="0.60" height="14" fill="#ef4444" />
+  <rect class="condition-block" x="363.87" y="260" width="13.51" height="14" fill="#22c55e" />
+  <rect class="condition-block" x="377.38" y="260" width="3.72" height="14" fill="#ef4444" />
+  <rect class="condition-block" x="381.10" y="260" width="13.51" height="14" fill="#22c55e" />
+  <rect class="condition-block" x="394.61" y="260" width="0.60" height="14" fill="#ef4444" />
+  <rect class="condition-block" x="394.95" y="260" width="13.51" height="14" fill="#22c55e" />
+  <rect class="condition-block" x="408.47" y="260" width="0.60" height="14" fill="#ef4444" />
+  <rect class="condition-block" x="408.80" y="260" width="13.51" height="14" fill="#22c55e" />
+  <rect class="condition-block" x="422.32" y="260" width="71.29" height="14" fill="#ef4444" />
+  <rect class="condition-block" x="493.61" y="260" width="13.51" height="14" fill="#22c55e" />
+  <rect class="condition-block" x="507.12" y="260" width="0.60" height="14" fill="#ef4444" />
+  <rect class="condition-block" x="507.46" y="260" width="13.51" height="14" fill="#22c55e" />
+  <rect class="condition-block" x="520.98" y="260" width="0.60" height="14" fill="#ef4444" />
+  <rect class="condition-block" x="521.32" y="260" width="13.51" height="14" fill="#22c55e" />
+  <rect class="condition-block" x="534.83" y="260" width="3.72" height="14" fill="#ef4444" />
+  <rect class="condition-block" x="538.55" y="260" width="13.51" height="14" fill="#22c55e" />
+  <rect class="condition-block" x="552.06" y="260" width="0.60" height="14" fill="#ef4444" />
+  <rect class="condition-block" x="552.40" y="260" width="13.51" height="14" fill="#22c55e" />
+  <rect class="condition-block" x="565.91" y="260" width="0.60" height="14" fill="#ef4444" />
+  <rect class="condition-block" x="566.25" y="260" width="13.51" height="14" fill="#22c55e" />
+  <rect class="condition-block" x="579.77" y="260" width="3.72" height="14" fill="#ef4444" />
+  <rect class="condition-block" x="583.48" y="260" width="13.51" height="14" fill="#22c55e" />
+  <rect class="condition-block" x="597.00" y="260" width="0.60" height="14" fill="#ef4444" />
+  <rect class="condition-block" x="597.34" y="260" width="13.51" height="14" fill="#22c55e" />
+  <rect class="condition-block" x="610.85" y="260" width="0.60" height="14" fill="#ef4444" />
+  <rect class="condition-block" x="611.19" y="260" width="13.51" height="14" fill="#22c55e" />
+  <rect class="condition-block" x="624.70" y="260" width="3.72" height="14" fill="#ef4444" />
+  <rect class="condition-block" x="628.42" y="260" width="13.51" height="14" fill="#22c55e" />
+  <rect class="condition-block" x="641.93" y="260" width="0.60" height="14" fill="#ef4444" />
+  <rect class="condition-block" x="642.27" y="260" width="13.51" height="14" fill="#22c55e" />
+  <rect class="condition-block" x="655.79" y="260" width="0.60" height="14" fill="#ef4444" />
+  <rect class="condition-block" x="656.12" y="260" width="13.51" height="14" fill="#22c55e" />
+  <rect class="condition-block" x="669.64" y="260" width="71.29" height="14" fill="#ef4444" />
+  <rect class="condition-block" x="740.93" y="260" width="13.51" height="14" fill="#22c55e" />
+  <rect class="condition-block" x="754.44" y="260" width="0.60" height="14" fill="#ef4444" />
+  <rect class="condition-block" x="754.78" y="260" width="13.51" height="14" fill="#22c55e" />
+  <rect class="condition-block" x="768.30" y="260" width="0.60" height="14" fill="#ef4444" />
+  <rect class="condition-block" x="768.63" y="260" width="13.51" height="14" fill="#22c55e" />
+  <rect class="condition-block" x="782.15" y="260" width="3.72" height="14" fill="#ef4444" />
+  <rect class="condition-block" x="785.87" y="260" width="13.51" height="14" fill="#22c55e" />
+  <rect class="condition-block" x="799.38" y="260" width="0.60" height="14" fill="#ef4444" />
+  <rect class="condition-block" x="799.72" y="260" width="13.51" height="14" fill="#22c55e" />
+  <rect class="condition-block" x="813.23" y="260" width="0.60" height="14" fill="#ef4444" />
+  <rect class="condition-block" x="813.57" y="260" width="13.51" height="14" fill="#22c55e" />
+  <rect class="condition-block" x="827.09" y="260" width="3.72" height="14" fill="#ef4444" />
+  <rect class="condition-block" x="830.80" y="260" width="13.51" height="14" fill="#22c55e" />
+  <rect class="condition-block" x="844.32" y="260" width="0.60" height="14" fill="#ef4444" />
+  <rect class="condition-block" x="844.66" y="260" width="13.51" height="14" fill="#22c55e" />
+  <rect class="condition-block" x="858.17" y="260" width="0.60" height="14" fill="#ef4444" />
+  <rect class="condition-block" x="858.51" y="260" width="13.51" height="14" fill="#22c55e" />
+  <rect class="condition-block" x="872.02" y="260" width="3.72" height="14" fill="#ef4444" />
+  <rect class="condition-block" x="875.74" y="260" width="13.51" height="14" fill="#22c55e" />
+  <rect class="condition-block" x="889.25" y="260" width="0.60" height="14" fill="#ef4444" />
+  <rect class="condition-block" x="889.59" y="260" width="13.51" height="14" fill="#22c55e" />
+  <rect class="condition-block" x="903.11" y="260" width="0.60" height="14" fill="#ef4444" />
+  <rect class="condition-block" x="903.44" y="260" width="16.56" height="14" fill="#22c55e" />
+  <line x1="175" y1="284" x2="920" y2="284" stroke="#334155" stroke-width="1" />
+  <line x1="175.0" y1="92" x2="175.0" y2="274" stroke="#1e293b" stroke-width="1" stroke-dasharray="2,3" />
+  <line x1="175.0" y1="284" x2="175.0" y2="289" stroke="#475569" stroke-width="1" />
+  <text x="175.0" y="301" fill="#94a3b8" font-size="10" text-anchor="middle">0</text>
+  <line x1="259.5" y1="92" x2="259.5" y2="274" stroke="#1e293b" stroke-width="1" stroke-dasharray="2,3" />
+  <line x1="259.5" y1="284" x2="259.5" y2="289" stroke="#475569" stroke-width="1" />
+  <text x="259.5" y="301" fill="#94a3b8" font-size="10" text-anchor="middle">250</text>
+  <line x1="343.9" y1="92" x2="343.9" y2="274" stroke="#1e293b" stroke-width="1" stroke-dasharray="2,3" />
+  <line x1="343.9" y1="284" x2="343.9" y2="289" stroke="#475569" stroke-width="1" />
+  <text x="343.9" y="301" fill="#94a3b8" font-size="10" text-anchor="middle">500</text>
+  <line x1="428.4" y1="92" x2="428.4" y2="274" stroke="#1e293b" stroke-width="1" stroke-dasharray="2,3" />
+  <line x1="428.4" y1="284" x2="428.4" y2="289" stroke="#475569" stroke-width="1" />
+  <text x="428.4" y="301" fill="#94a3b8" font-size="10" text-anchor="middle">750</text>
+  <line x1="512.9" y1="92" x2="512.9" y2="274" stroke="#1e293b" stroke-width="1" stroke-dasharray="2,3" />
+  <line x1="512.9" y1="284" x2="512.9" y2="289" stroke="#475569" stroke-width="1" />
+  <text x="512.9" y="301" fill="#94a3b8" font-size="10" text-anchor="middle">1000</text>
+  <line x1="597.3" y1="92" x2="597.3" y2="274" stroke="#1e293b" stroke-width="1" stroke-dasharray="2,3" />
+  <line x1="597.3" y1="284" x2="597.3" y2="289" stroke="#475569" stroke-width="1" />
+  <text x="597.3" y="301" fill="#94a3b8" font-size="10" text-anchor="middle">1250</text>
+  <line x1="681.8" y1="92" x2="681.8" y2="274" stroke="#1e293b" stroke-width="1" stroke-dasharray="2,3" />
+  <line x1="681.8" y1="284" x2="681.8" y2="289" stroke="#475569" stroke-width="1" />
+  <text x="681.8" y="301" fill="#94a3b8" font-size="10" text-anchor="middle">1500</text>
+  <line x1="766.3" y1="92" x2="766.3" y2="274" stroke="#1e293b" stroke-width="1" stroke-dasharray="2,3" />
+  <line x1="766.3" y1="284" x2="766.3" y2="289" stroke="#475569" stroke-width="1" />
+  <text x="766.3" y="301" fill="#94a3b8" font-size="10" text-anchor="middle">1750</text>
+  <line x1="850.7" y1="92" x2="850.7" y2="274" stroke="#1e293b" stroke-width="1" stroke-dasharray="2,3" />
+  <line x1="850.7" y1="284" x2="850.7" y2="289" stroke="#475569" stroke-width="1" />
+  <text x="850.7" y="301" fill="#94a3b8" font-size="10" text-anchor="middle">2000</text>
+  <line x1="920.0" y1="92" x2="920.0" y2="274" stroke="#1e293b" stroke-width="1" stroke-dasharray="2,3" />
+  <line x1="920.0" y1="284" x2="920.0" y2="289" stroke="#475569" stroke-width="1" />
+  <text x="920.0" y="301" fill="#94a3b8" font-size="10" text-anchor="middle">2205 cyc</text>
+  <line class="cursor-glow" x1="175" y1="88" x2="175" y2="278" stroke="#22d3ee" stroke-width="6" opacity="0.3">
+    <animate attributeName="x1" from="175" to="920" dur="12s" repeatCount="indefinite" />
+    <animate attributeName="x2" from="175" to="920" dur="12s" repeatCount="indefinite" />
+  </line>
+  <line class="cursor-line" x1="175" y1="88" x2="175" y2="278" stroke="#22d3ee" stroke-width="2">
+    <animate attributeName="x1" from="175" to="920" dur="12s" repeatCount="indefinite" />
+    <animate attributeName="x2" from="175" to="920" dur="12s" repeatCount="indefinite" />
+  </line>
+  <circle cx="175" cy="88" r="3.5" fill="#22d3ee">
+    <animate attributeName="cx" from="175" to="920" dur="12s" repeatCount="indefinite" />
+  </circle>
+  <rect x="113" y="314" width="124" height="24" rx="4" fill="#111a2e" stroke="#22d3ee" stroke-width="1.2">
+    <animate attributeName="x" from="113" to="858" dur="12s" repeatCount="indefinite" />
+  </rect>
+  <text x="175" y="330" fill="#22d3ee" font-size="11" font-weight="600" text-anchor="middle">
+    <animate attributeName="x" from="175" to="920" dur="12s" repeatCount="indefinite" />
+    <animate attributeName="opacity" values="1;1;0;0"
+      keyTimes="0;0.249;0.250;1" dur="12s" repeatCount="indefinite" />
+    Cycles 1 - 551
+  </text>
+  <text x="175" y="330" fill="#22d3ee" font-size="11" font-weight="600" text-anchor="middle">
+    <animate attributeName="x" from="175" to="920" dur="12s" repeatCount="indefinite" />
+    <animate attributeName="opacity" values="0;0;1;1;0;0"
+      keyTimes="0;0.249;0.250;0.499;0.500;1" dur="12s" repeatCount="indefinite" />
+    Cycles 552 - 1102
+  </text>
+  <text x="175" y="330" fill="#22d3ee" font-size="11" font-weight="600" text-anchor="middle">
+    <animate attributeName="x" from="175" to="920" dur="12s" repeatCount="indefinite" />
+    <animate attributeName="opacity" values="0;0;1;1;0;0"
+      keyTimes="0;0.499;0.500;0.749;0.750;1" dur="12s" repeatCount="indefinite" />
+    Cycles 1103 - 1653
+  </text>
+  <text x="175" y="330" fill="#22d3ee" font-size="11" font-weight="600" text-anchor="middle">
+    <animate attributeName="x" from="175" to="920" dur="12s" repeatCount="indefinite" />
+    <animate attributeName="opacity" values="0;0;1;1"
+      keyTimes="0;0.749;0.750;1" dur="12s" repeatCount="indefinite" />
+    Cycles 1654 - 2205
+  </text>
+</svg>

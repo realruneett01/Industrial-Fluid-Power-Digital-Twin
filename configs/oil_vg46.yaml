@@ -1,0 +1,7 @@
+# Assumed ISO VG 46 mineral oil (ASTM D341 Walther calibration points)
+t1_c: 40.0
+nu1_cst: 46.0
+t2_c: 100.0
+nu2_cst: 6.8
+eta_motor: 0.90
+t_ambient_ref_c: 20.0

@@ -1,0 +1,15 @@
+dataset:
+  url: https://archive.ics.uci.edu/static/public/447/condition+monitoring+of+hydraulic+systems.zip
+  # Trust-on-first-use digest, recorded from the first verified download on 2026-10-19.
+  sha256: 24128aad2ee45eea7e6b63ebbd9992cdf25d0483a2cebefbfc13bc69079af1f2
+  n_cycles: 2205
+paths:
+  raw: data/raw
+  interim: data/interim
+  reports: reports
+split:
+  n_splits: 5
+  # null = median of per-cycle mean TS1, computed on the data
+  temp_shift_threshold_c: null
+exclude_virtual: true
+targets: [cooler, valve, pump, accumulator]

@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hydro"
+version = "0.1.0"
+description = "Level-2 condition monitoring and grey-box diagnostics for the ZeMA hydraulic test stand (UCI 447)"
+requires-python = ">=3.12"
+license = { text = "AGPL-3.0-or-later" }
+dependencies = [
+    "numpy>=2.2",
+    "scipy>=1.15",
+    "pandas>=2.2",
+    "pyarrow>=17",
+    "pyyaml>=6",
+    "scikit-learn>=1.6",
+    "catboost>=1.2.7",
+    "torch>=2.6",
+    "onnx>=1.17",
+    "onnxruntime>=1.21",
+    "asyncua>=1.1",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.3", "ruff>=0.8"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src", "."]
+markers = ["heavy: runs against the full real dataset; needs --heavy-check"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "N", "SIM", "NPY"]

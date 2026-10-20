@@ -1,0 +1,14 @@
+seed: 42
+lda: {}
+random_forest:
+  n_estimators: 300
+  n_jobs: -1
+catboost:
+  iterations: 500
+  depth: 6
+  learning_rate: 0.08
+  verbose: 0
+cnn:
+  epochs: 15
+  batch_size: 64
+  lr: 0.001

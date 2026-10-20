@@ -1,0 +1,615 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" width="100%" height="100%">
+  <title>Hydraulic Condition Monitoring Digital Twin System Architecture</title>
+  <desc>Animated system pipeline diagram: multi-rate physical sensing (100Hz, 10Hz, 1Hz), ingestion, grey-box physics feature engineering, ONNX supervisory twin, OPC-UA replay server, Health Index gauge sweeping 0.95 to 0.26, and automated ERPNext CMMS work order generation.</desc>
+
+  <style>
+    /* Typography and core font stack */
+    text {
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      text-rendering: geometricPrecision;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Keyframe animations */
+    @keyframes pulseCard4 {
+      0%, 30% { stroke: #1e293b; stroke-width: 1.5; filter: none; }
+      40% { stroke: #22d3ee; stroke-width: 2.2; filter: drop-shadow(0 0 6px rgba(34, 211, 238, 0.5)); }
+      55% { stroke: #22c55e; stroke-width: 2; filter: drop-shadow(0 0 5px rgba(34, 197, 94, 0.4)); }
+      68%, 100% { stroke: #1e293b; stroke-width: 1.5; filter: none; }
+    }
+
+    @keyframes pulseAlertBorder {
+      0%, 100% { stroke: #ef4444; }
+      50% { stroke: #f59e0b; }
+    }
+
+    .card-border-glow {
+      animation: pulseCard4 12s infinite;
+    }
+
+    .alert-ticket-stroke {
+      animation: pulseAlertBorder 2s infinite ease-in-out;
+    }
+
+    /* Respect reduced-motion preferences */
+    @media (prefers-reduced-motion: reduce) {
+      *, animate, animateTransform, animateMotion {
+        animation-play-state: paused !important;
+        animation-duration: 0.01ms !important;
+        animation: none !important;
+      }
+    }
+  </style>
+
+  <defs>
+    <!-- Card Gradients -->
+    <linearGradient id="card-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#141e34"/>
+      <stop offset="100%" stop-color="#0e172a"/>
+    </linearGradient>
+
+    <linearGradient id="inner-panel-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#0b1220"/>
+      <stop offset="100%" stop-color="#070c18"/>
+    </linearGradient>
+
+    <linearGradient id="cyan-glow-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#22d3ee"/>
+      <stop offset="100%" stop-color="#0284c7"/>
+    </linearGradient>
+
+    <linearGradient id="ticket-header-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#7f1d1d"/>
+      <stop offset="100%" stop-color="#991b1b"/>
+    </linearGradient>
+
+    <!-- Waveform clipping masks -->
+    <clipPath id="clip-100hz">
+      <rect x="11" y="47" width="173" height="23" rx="4"/>
+    </clipPath>
+
+    <clipPath id="clip-10hz">
+      <rect x="11" y="85" width="173" height="23" rx="4"/>
+    </clipPath>
+
+    <clipPath id="clip-1hz">
+      <rect x="11" y="123" width="173" height="23" rx="4"/>
+    </clipPath>
+
+    <!-- ERPNext ticket slide clipping mask -->
+    <clipPath id="clip-ticket-slot">
+      <rect x="5" y="58" width="185" height="125"/>
+    </clipPath>
+  </defs>
+
+  <!-- Canvas Background (Readable in GitHub Light & Dark Modes) -->
+  <rect width="960" height="540" rx="14" fill="#0b1220" stroke="#1e293b" stroke-width="1.5"/>
+
+  <!-- ==================== HEADER ==================== -->
+  <g id="header" transform="translate(45, 20)">
+    <!-- Circuit mark icon -->
+    <g transform="translate(0, 4)">
+      <rect width="24" height="24" rx="6" fill="#1e293b"/>
+      <circle cx="12" cy="12" r="5" fill="#22d3ee" fill-opacity="0.3"/>
+      <circle cx="12" cy="12" r="2.5" fill="#22d3ee"/>
+      <line x1="12" y1="3" x2="12" y2="7" stroke="#22d3ee" stroke-width="1.5"/>
+      <line x1="12" y1="17" x2="12" y2="21" stroke="#22d3ee" stroke-width="1.5"/>
+      <line x1="3" y1="12" x2="7" y2="12" stroke="#22d3ee" stroke-width="1.5"/>
+      <line x1="17" y1="12" x2="21" y2="12" stroke="#22d3ee" stroke-width="1.5"/>
+    </g>
+
+    <text x="34" y="16" fill="#f8fafc" font-size="13.5" font-weight="700" letter-spacing="0.8">HYDRAULIC CONDITION MONITORING DIGITAL TWIN</text>
+    <text x="34" y="30" fill="#94a3b8" font-size="9.5">Multi-Rate Sensing (100/10/1 Hz) &#x2192; Grey-Box Physics &#x2192; ONNX Inference &#x2192; CMMS Dispatch</text>
+
+    <!-- Top Right Badge: Read-Only Client Telemetry -->
+    <g transform="translate(725, 0)">
+      <rect width="145" height="24" rx="12" fill="#111a2e" stroke="#22c55e" stroke-width="1" stroke-opacity="0.5"/>
+      <circle cx="14" cy="12" r="3.5" fill="#22c55e">
+        <animate attributeName="opacity" values="1;0.3;1" dur="2s" repeatCount="indefinite"/>
+      </circle>
+      <text x="24" y="15.5" fill="#e2e8f0" font-size="8.5" font-weight="600" letter-spacing="0.5">READ-ONLY CLIENT</text>
+    </g>
+  </g>
+
+  <!-- ==================== CONNECTORS & BUSES ==================== -->
+  <!-- Top Row Connectors (1 -> 2, 2 -> 3, 3 -> 4) -->
+  <g id="top-connectors">
+    <!-- Connector 1 -> 2 -->
+    <line x1="240" y1="157" x2="270" y2="157" stroke="#334155" stroke-width="1.8" stroke-dasharray="3 3"/>
+    <polygon points="267,154 273,157 267,160" fill="#38bdf8"/>
+    <circle cy="157" r="3" fill="#22d3ee">
+      <animate attributeName="cx" values="240; 270" dur="1.2s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0; 1; 1; 0" dur="1.2s" repeatCount="indefinite"/>
+    </circle>
+
+    <!-- Connector 2 -> 3 -->
+    <line x1="465" y1="157" x2="495" y2="157" stroke="#334155" stroke-width="1.8" stroke-dasharray="3 3"/>
+    <polygon points="492,154 498,157 492,160" fill="#38bdf8"/>
+    <circle cy="157" r="3" fill="#22d3ee">
+      <animate attributeName="cx" values="465; 495" dur="1.2s" begin="0.3s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0; 1; 1; 0" dur="1.2s" begin="0.3s" repeatCount="indefinite"/>
+    </circle>
+
+    <!-- Connector 3 -> 4 -->
+    <line x1="690" y1="157" x2="720" y2="157" stroke="#334155" stroke-width="1.8" stroke-dasharray="3 3"/>
+    <polygon points="717,154 723,157 717,160" fill="#38bdf8"/>
+    <circle cy="157" r="3" fill="#22d3ee">
+      <animate attributeName="cx" values="690; 720" dur="1.2s" begin="0.6s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0; 1; 1; 0" dur="1.2s" begin="0.6s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+
+  <!-- Inter-Row S-Bridge Connector (Card 4 down and across to Card 5) -->
+  <g id="inter-row-bus">
+    <path d="M 817 250 V 272 H 142 V 295" fill="none" stroke="#334155" stroke-width="1.8" stroke-dasharray="4 4"/>
+    <polygon points="139,292 142,298 145,292" fill="#22d3ee"/>
+
+    <!-- Inter-row Bus Label Pill -->
+    <g transform="translate(370, 263)">
+      <rect width="220" height="18" rx="9" fill="#0b1220" stroke="#334155" stroke-width="1"/>
+      <text x="110" y="12" fill="#94a3b8" font-size="8" font-weight="600" text-anchor="middle" letter-spacing="0.5">ONNX ARTIFACTS &amp; REPLAY BUS</text>
+    </g>
+
+    <!-- Travelling Packet along S-bridge -->
+    <circle r="3.5" fill="#22d3ee">
+      <animateMotion path="M 817 250 V 272 H 142 V 295" dur="12s" keyTimes="0;0.50;0.62;0.72;1" keyPoints="0;0;0.5;1;1" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.49;0.52;0.72;0.75" dur="12s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+
+  <!-- Bottom Row Connectors (5 -> 6, 6 -> 7, 7 -> 8) -->
+  <g id="bottom-connectors">
+    <!-- Connector 5 -> 6 -->
+    <line x1="240" y1="387" x2="270" y2="387" stroke="#334155" stroke-width="1.8" stroke-dasharray="3 3"/>
+    <polygon points="267,384 273,387 267,390" fill="#38bdf8"/>
+    <circle cy="387" r="3" fill="#22d3ee">
+      <animate attributeName="cx" values="240; 270" dur="1.2s" begin="0.2s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0; 1; 1; 0" dur="1.2s" begin="0.2s" repeatCount="indefinite"/>
+    </circle>
+
+    <!-- Connector 6 -> 7 -->
+    <line x1="465" y1="387" x2="495" y2="387" stroke="#334155" stroke-width="1.8" stroke-dasharray="3 3"/>
+    <polygon points="492,384 498,387 492,390" fill="#38bdf8"/>
+    <circle cy="387" r="3" fill="#22d3ee">
+      <animate attributeName="cx" values="465; 495" dur="1.2s" begin="0.5s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0; 1; 1; 0" dur="1.2s" begin="0.5s" repeatCount="indefinite"/>
+    </circle>
+
+    <!-- Connector 7 -> 8 (Alert Dispatch Trigger) -->
+    <line x1="690" y1="387" x2="720" y2="387" stroke="#334155" stroke-width="1.8" stroke-dasharray="3 3"/>
+    <polygon points="717,384 723,387 717,390" fill="#ef4444"/>
+    <circle cy="387" r="3.5" fill="#ef4444">
+      <animate attributeName="cx" values="690; 690; 720; 720" keyTimes="0; 0.69; 0.74; 1" dur="12s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0; 0; 1; 0" keyTimes="0; 0.68; 0.72; 0.78" dur="12s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+
+
+  <!-- ==================== STAGE CARDS: ROW 1 ==================== -->
+
+  <!-- CARD 1: PLANT SENSORS (17 Raw Channels) -->
+  <g id="card-1" transform="translate(45, 65)">
+    <rect width="195" height="185" rx="10" fill="url(#card-grad)" stroke="#1e293b" stroke-width="1.5"/>
+
+    <!-- Header & Icon -->
+    <circle cx="20" cy="20" r="10" fill="#0369a1" fill-opacity="0.3"/>
+    <path d="M 15 20 Q 17.5 14 20 20 T 25 20" fill="none" stroke="#22d3ee" stroke-width="1.5"/>
+    <text x="36" y="18" fill="#38bdf8" font-size="9.5" font-weight="700" letter-spacing="0.5">01 &#183; PLANT SENSORS</text>
+    <text x="36" y="28" fill="#64748b" font-size="7.5">17 raw channels</text>
+
+    <!-- 100 Hz Channels (PS1-PS6, EPS1) -->
+    <text x="12" y="44" fill="#22d3ee" font-size="7.5" font-weight="600">PS1&#8211;PS6, EPS1 &#183; 100 Hz</text>
+    <rect x="11" y="47" width="173" height="23" rx="4" fill="url(#inner-panel-grad)" stroke="#1e293b"/>
+    <!-- Grid line -->
+    <line x1="11" y1="58" x2="184" y2="58" stroke="#1e293b" stroke-width="0.8" stroke-dasharray="2 2"/>
+    <g clip-path="url(#clip-100hz)">
+      <path d="M 0 58 L 5 58 L 8 50 L 12 65 L 15 52 L 18 62 L 21 54 L 24 60 L 27 57 L 30 58 L 35 58 L 40 58 L 45 58 L 48 50 L 52 65 L 55 52 L 58 62 L 61 54 L 64 60 L 67 57 L 70 58 L 75 58 L 80 58 L 85 58 L 88 50 L 92 65 L 95 52 L 98 62 L 101 54 L 104 60 L 107 57 L 110 58 L 115 58 L 120 58 L 125 58 L 128 50 L 132 65 L 135 52 L 138 62 L 141 54 L 144 60 L 147 57 L 150 58 L 155 58 L 160 58 L 165 58 L 168 50 L 172 65 L 175 52 L 178 62 L 181 54 L 184 60 L 187 57 L 190 58 L 195 58 L 200 58 L 205 58 L 208 50 L 212 65 L 215 52 L 218 62 L 221 54 L 224 60 L 227 57 L 230 58 L 235 58 L 240 58 L 245 58 L 248 50 L 252 65 L 255 52 L 258 62 L 261 54 L 264 60 L 267 57 L 270 58 L 275 58 L 280 58"
+            fill="none" stroke="#22d3ee" stroke-width="1.3">
+        <animateTransform attributeName="transform" type="translate" from="0,0" to="-40,0" dur="0.8s" repeatCount="indefinite"/>
+      </path>
+    </g>
+
+    <!-- 10 Hz Channels (FS1, FS2) -->
+    <text x="12" y="82" fill="#38bdf8" font-size="7.5" font-weight="600">FS1, FS2 &#183; 10 Hz</text>
+    <rect x="11" y="85" width="173" height="23" rx="4" fill="url(#inner-panel-grad)" stroke="#1e293b"/>
+    <line x1="11" y1="96" x2="184" y2="96" stroke="#1e293b" stroke-width="0.8" stroke-dasharray="2 2"/>
+    <g clip-path="url(#clip-10hz)">
+      <path d="M 0 100 C 12 100, 18 89, 30 89 C 42 89, 48 103, 60 103 L 70 100 L 80 100 C 92 100, 98 89, 110 89 C 122 89, 128 103, 140 103 L 150 100 L 160 100 C 172 100, 178 89, 190 89 C 202 89, 208 103, 220 103 L 230 100 L 240 100 C 252 100, 258 89, 270 89 C 282 89, 288 103, 300 103 L 310 100 L 320 100"
+            fill="none" stroke="#38bdf8" stroke-width="1.4">
+        <animateTransform attributeName="transform" type="translate" from="0,0" to="-80,0" dur="2.4s" repeatCount="indefinite"/>
+      </path>
+    </g>
+
+    <!-- 1 Hz Channels (TS1-TS4, VS1) -->
+    <text x="12" y="120" fill="#94a3b8" font-size="7.5" font-weight="600">TS1&#8211;TS4, VS1 &#183; 1 Hz</text>
+    <rect x="11" y="123" width="173" height="23" rx="4" fill="url(#inner-panel-grad)" stroke="#1e293b"/>
+    <line x1="11" y1="134" x2="184" y2="134" stroke="#1e293b" stroke-width="0.8" stroke-dasharray="2 2"/>
+    <g clip-path="url(#clip-1hz)">
+      <path d="M 0 134 C 40 142, 80 126, 120 130 C 140 132, 150 134, 160 134 C 200 142, 240 126, 280 130 C 300 132, 310 134, 320 134 C 360 142, 400 126, 440 130 C 460 132, 470 134, 480 134"
+            fill="none" stroke="#94a3b8" stroke-width="1.3">
+        <animateTransform attributeName="transform" type="translate" from="0,0" to="-160,0" dur="7.2s" repeatCount="indefinite"/>
+      </path>
+    </g>
+
+    <!-- Footer metadata -->
+    <text x="12" y="161" fill="#64748b" font-size="7">Virtual CE/CP/SE excluded</text>
+    <circle cx="15" cy="173" r="2.5" fill="#22c55e"/>
+    <text x="21" y="176" fill="#22c55e" font-size="7" font-weight="600">14 physical channels used</text>
+  </g>
+
+
+  <!-- CARD 2: DATA INGESTION & STORAGE -->
+  <g id="card-2" transform="translate(270, 65)">
+    <rect width="195" height="185" rx="10" fill="url(#card-grad)" stroke="#1e293b" stroke-width="1.5"/>
+
+    <!-- Header & Icon -->
+    <circle cx="20" cy="20" r="10" fill="#0369a1" fill-opacity="0.3"/>
+    <path d="M 15 17 H 25 V 24 H 15 Z M 15 21 H 25" fill="none" stroke="#22d3ee" stroke-width="1.3"/>
+    <text x="36" y="18" fill="#38bdf8" font-size="9.5" font-weight="700" letter-spacing="0.5">02 &#183; INGESTION</text>
+    <text x="36" y="28" fill="#64748b" font-size="7.5">Validation &amp; Parquet Archive</text>
+
+    <!-- SHA-256 Digest Box -->
+    <rect x="10" y="44" width="175" height="28" rx="4" fill="url(#inner-panel-grad)" stroke="#1e293b"/>
+    <circle cx="22" cy="58" r="4.5" fill="#065f46"/>
+    <path d="M 19.5 58 L 21.5 60 L 25 56.5" fill="none" stroke="#34d399" stroke-width="1.2"/>
+    <text x="32" y="54" fill="#e2e8f0" font-size="7.5" font-weight="600">SHA-256 Integrity Check</text>
+    <text x="32" y="64" fill="#34d399" font-size="7" font-family="monospace">e3b0c442... [MATCH]</text>
+
+    <!-- Columnar Parquet Storage Box -->
+    <rect x="10" y="80" width="175" height="34" rx="4" fill="url(#inner-panel-grad)" stroke="#1e293b"/>
+    <rect x="18" y="88" width="12" height="16" rx="2" fill="#0369a1" fill-opacity="0.4" stroke="#38bdf8" stroke-width="1"/>
+    <text x="36" y="93" fill="#e2e8f0" font-size="7.5" font-weight="600">Columnar Parquet Archive</text>
+    <text x="36" y="103" fill="#94a3b8" font-size="7">Snappy compressed &#183; zero-copy</text>
+
+    <!-- Ingestion Guard Rules -->
+    <text x="12" y="132" fill="#94a3b8" font-size="7.2">&#10003; 60s Cycle Alignment Gate</text>
+    <text x="12" y="145" fill="#94a3b8" font-size="7.2">&#10003; Blocked 5-Fold CV (Zero Leakage)</text>
+    <text x="12" y="158" fill="#94a3b8" font-size="7.2">&#10003; Temperature-Shift Holdout Fold</text>
+
+    <!-- Active Ingest Dot -->
+    <circle cx="16" cy="173" r="3" fill="#22d3ee">
+      <animate attributeName="opacity" values="0.2;1;0.2" dur="1.2s" repeatCount="indefinite"/>
+    </circle>
+    <text x="24" y="176" fill="#64748b" font-size="7">Parquet stream buffer ready</text>
+  </g>
+
+
+  <!-- CARD 3: FEATURE ENGINEERING (Physics + Stats) -->
+  <g id="card-3" transform="translate(495, 65)">
+    <rect width="195" height="185" rx="10" fill="url(#card-grad)" stroke="#1e293b" stroke-width="1.5"/>
+
+    <!-- Header & Icon -->
+    <circle cx="20" cy="20" r="10" fill="#0369a1" fill-opacity="0.3"/>
+    <circle cx="20" cy="20" r="5" fill="none" stroke="#22d3ee" stroke-width="1.3"/>
+    <circle cx="20" cy="20" r="1.5" fill="#22d3ee"/>
+    <text x="36" y="18" fill="#38bdf8" font-size="9.5" font-weight="700" letter-spacing="0.5">03 &#183; FEATURE ENGINE</text>
+    <text x="36" y="28" fill="#64748b" font-size="7.5">Stats + Grey-Box Physics</text>
+
+    <!-- Feature 1: Walther Viscosity -->
+    <text x="12" y="47" fill="#cbd5e1" font-size="7.2">Walther &#957; (ASTM D341)</text>
+    <text x="183" y="47" fill="#22d3ee" font-size="7.2" font-family="monospace" text-anchor="end">46.2 mm&#178;/s</text>
+    <rect x="11" y="51" width="173" height="5" rx="2.5" fill="#1e293b"/>
+    <rect x="11" y="51" height="5" rx="2.5" fill="#22d3ee">
+      <animate attributeName="width" values="20; 130; 130; 20" keyTimes="0; 0.28; 0.85; 1" dur="12s" repeatCount="indefinite"/>
+    </rect>
+
+    <!-- Feature 2: Lumped Capacitance C_eff -->
+    <text x="12" y="73" fill="#cbd5e1" font-size="7.2">Lumped Cap. C_eff</text>
+    <text x="183" y="73" fill="#06b6d4" font-size="7.2" font-family="monospace" text-anchor="end">1.4&#215;10&#8315;&#185;&#8304; m&#179;/Pa</text>
+    <rect x="11" y="77" width="173" height="5" rx="2.5" fill="#1e293b"/>
+    <rect x="11" y="77" height="5" rx="2.5" fill="#06b6d4">
+      <animate attributeName="width" values="18; 105; 105; 18" keyTimes="0; 0.30; 0.85; 1" dur="12s" repeatCount="indefinite"/>
+    </rect>
+
+    <!-- Feature 3: Pump Leakage K_leak -->
+    <text x="12" y="99" fill="#cbd5e1" font-size="7">Pump Leakage K_leak_rel</text>
+    <text x="183" y="99" fill="#f59e0b" font-size="7" font-family="monospace" text-anchor="end">0.18 relative index</text>
+    <rect x="11" y="103" width="173" height="5" rx="2.5" fill="#1e293b"/>
+    <rect x="11" y="103" height="5" rx="2.5" fill="#f59e0b">
+      <animate attributeName="width" values="15; 140; 140; 15" keyTimes="0; 0.33; 0.85; 1" dur="12s" repeatCount="indefinite"/>
+    </rect>
+
+    <!-- Feature 4: Valve Edge Delay -->
+    <text x="12" y="125" fill="#cbd5e1" font-size="7.2">Valve Edge Delay &#916;t</text>
+    <text x="183" y="125" fill="#ef4444" font-size="7.2" font-family="monospace" text-anchor="end">42 ms (lag)</text>
+    <rect x="11" y="129" width="173" height="5" rx="2.5" fill="#1e293b"/>
+    <rect x="11" y="129" height="5" rx="2.5" fill="#ef4444">
+      <animate attributeName="width" values="12; 150; 150; 12" keyTimes="0; 0.36; 0.85; 1" dur="12s" repeatCount="indefinite"/>
+    </rect>
+
+    <!-- Footer formula badge -->
+    <rect x="11" y="148" width="173" height="26" rx="4" fill="url(#inner-panel-grad)" stroke="#1e293b"/>
+    <text x="16" y="158" fill="#64748b" font-size="6.8">Causal Thermal Effectiveness &#951;_th</text>
+    <text x="16" y="168" fill="#38bdf8" font-size="6.8" font-family="monospace">log log(&#957; + 0.7) = A - B log T</text>
+  </g>
+
+
+  <!-- CARD 4: ML MODELS & ONNX EXPORT -->
+  <g id="card-4" transform="translate(720, 65)">
+    <!-- Card Border with sequential glowing keyframes -->
+    <rect class="card-border-glow" width="195" height="185" rx="10" fill="url(#card-grad)" stroke="#1e293b" stroke-width="1.5"/>
+
+    <!-- Header & Icon -->
+    <circle cx="20" cy="20" r="10" fill="#0369a1" fill-opacity="0.3"/>
+    <path d="M 16 16 L 24 20 L 16 24 Z" fill="none" stroke="#22d3ee" stroke-width="1.3"/>
+    <text x="36" y="18" fill="#38bdf8" font-size="9.5" font-weight="700" letter-spacing="0.5">04 &#183; ML &amp; ONNX</text>
+    <text x="36" y="28" fill="#64748b" font-size="7.5">Dual Model Parity Check</text>
+
+    <!-- Model 1: CatBoost Hybrid -->
+    <rect x="10" y="44" width="175" height="28" rx="4" fill="url(#inner-panel-grad)" stroke="#1e293b">
+      <animate attributeName="stroke" values="#1e293b;#1e293b;#22d3ee;#1e293b" dur="12s" keyTimes="0;0.32;0.42;0.52" repeatCount="indefinite"/>
+    </rect>
+    <text x="18" y="55" fill="#e2e8f0" font-size="7.5" font-weight="600">CatBoost (Hybrid Physics)</text>
+    <text x="18" y="65" fill="#94a3b8" font-size="7">Blocked 5-fold CV &#183; temp-shift</text>
+
+    <!-- Model 2: 1D-CNN Multi-Scale -->
+    <rect x="10" y="78" width="175" height="28" rx="4" fill="url(#inner-panel-grad)" stroke="#1e293b">
+      <animate attributeName="stroke" values="#1e293b;#1e293b;#22d3ee;#1e293b" dur="12s" keyTimes="0;0.40;0.50;0.60" repeatCount="indefinite"/>
+    </rect>
+    <text x="18" y="89" fill="#e2e8f0" font-size="7.5" font-weight="600">1D-CNN (Multi-Scale Waveform)</text>
+    <text x="18" y="99" fill="#94a3b8" font-size="7">Raw sequence deep representation</text>
+
+    <!-- Model 3: ONNX Runtime Parity Verified -->
+    <rect x="10" y="112" width="175" height="42" rx="4" fill="url(#inner-panel-grad)" stroke="#1e293b">
+      <animate attributeName="stroke" values="#1e293b;#1e293b;#22c55e;#1e293b" dur="12s" keyTimes="0;0.48;0.58;0.70" repeatCount="indefinite"/>
+    </rect>
+    <text x="18" y="124" fill="#38bdf8" font-size="8" font-weight="700">ONNX Runtime Export</text>
+    <rect x="18" y="129" width="85" height="12" rx="2" fill="#064e3b"/>
+    <text x="22" y="138" fill="#34d399" font-size="7" font-weight="700">PARITY VALIDATED</text>
+    <text x="18" y="149" fill="#94a3b8" font-size="6.8">allclose rtol 1e-5 / atol 1e-6</text>
+
+    <!-- Status dot -->
+    <circle cx="16" cy="168" r="3" fill="#22c55e">
+      <animate attributeName="opacity" values="0.3;0.3;1;0.3" dur="12s" keyTimes="0;0.48;0.58;0.70" repeatCount="indefinite"/>
+    </circle>
+    <text x="24" y="171" fill="#64748b" font-size="7">Static graph &#183; zero dependencies</text>
+  </g>
+
+
+  <!-- ==================== STAGE CARDS: ROW 2 ==================== -->
+
+  <!-- CARD 5: OPC-UA REPLAY SERVER -->
+  <g id="card-5" transform="translate(45, 295)">
+    <rect width="195" height="185" rx="10" fill="url(#card-grad)" stroke="#1e293b" stroke-width="1.5"/>
+
+    <!-- Header & Icon -->
+    <circle cx="20" cy="20" r="10" fill="#0369a1" fill-opacity="0.3"/>
+    <path d="M 20 14 V 26 M 15 17 Q 20 14 25 17 M 17 21 Q 20 18 23 21" fill="none" stroke="#22d3ee" stroke-width="1.2"/>
+    <text x="36" y="18" fill="#38bdf8" font-size="9.5" font-weight="700" letter-spacing="0.5">05 &#183; OPC-UA SERVER</text>
+    <text x="36" y="28" fill="#64748b" font-size="7.5">Real-Time Streaming Replay</text>
+
+    <!-- 10 Hz Atomic BlockFrame Box -->
+    <rect x="10" y="44" width="175" height="34" rx="4" fill="url(#inner-panel-grad)" stroke="#1e293b"/>
+    <text x="18" y="56" fill="#e2e8f0" font-size="7.5" font-weight="600">Atomic BlockFrame (10 Hz cadence)</text>
+    <rect x="18" y="61" width="58" height="11" rx="2" fill="#0369a1"/>
+    <text x="22" y="69.5" fill="#e0f2fe" font-size="6.8" font-weight="700">10 Hz CADENCE</text>
+    <text x="82" y="69.5" fill="#38bdf8" font-size="7">10 frames / sec</text>
+
+    <!-- Read-Only Safety Node Box -->
+    <rect x="10" y="84" width="175" height="34" rx="4" fill="url(#inner-panel-grad)" stroke="#1e293b"/>
+    <circle cx="24" cy="101" r="5" fill="#065f46"/>
+    <path d="M 22 101 H 26 V 104 H 22 Z M 23 101 V 99 Q 24 98 25 99 V 101" fill="none" stroke="#34d399" stroke-width="1"/>
+    <text x="35" y="96" fill="#22c55e" font-size="7.5" font-weight="600">Read-Only Namespace</text>
+    <text x="35" y="106" fill="#94a3b8" font-size="7">Zero write methods exposed</text>
+
+    <!-- Node Address list -->
+    <text x="12" y="134" fill="#64748b" font-size="7" font-family="monospace">ns=2;s=BlockFrame.PS1..6</text>
+    <text x="12" y="146" fill="#64748b" font-size="7" font-family="monospace">ns=2;s=BlockFrame.FS1..2</text>
+    <text x="12" y="158" fill="#64748b" font-size="7" font-family="monospace">ns=2;s=BlockFrame.TS1..4</text>
+
+    <!-- Replay Activity LED -->
+    <circle cx="16" cy="173" r="3" fill="#22d3ee">
+      <animate attributeName="opacity" values="0.2;1;0.2" dur="0.8s" repeatCount="indefinite"/>
+    </circle>
+    <text x="24" y="176" fill="#64748b" font-size="7">Simulated plant replay running</text>
+  </g>
+
+
+  <!-- CARD 6: SUPERVISORY ADVISOR CLIENT -->
+  <g id="card-6" transform="translate(270, 295)">
+    <rect width="195" height="185" rx="10" fill="url(#card-grad)" stroke="#1e293b" stroke-width="1.5"/>
+
+    <!-- Header & Icon -->
+    <circle cx="20" cy="20" r="10" fill="#0369a1" fill-opacity="0.3"/>
+    <rect x="15" y="15" width="10" height="10" rx="2" fill="none" stroke="#22d3ee" stroke-width="1.2"/>
+    <circle cx="20" cy="20" r="2" fill="#22d3ee"/>
+    <text x="36" y="18" fill="#38bdf8" font-size="9.5" font-weight="700" letter-spacing="0.5">06 &#183; ADVISOR CLIENT</text>
+    <text x="36" y="28" fill="#64748b" font-size="7.5">Supervisory Cycle Twin</text>
+
+    <!-- 60s Cycle Assembly Box -->
+    <rect x="10" y="44" width="175" height="34" rx="4" fill="url(#inner-panel-grad)" stroke="#1e293b"/>
+    <text x="18" y="56" fill="#e2e8f0" font-size="7.5" font-weight="600">Cycle Assembly Buffer</text>
+    <text x="18" y="66" fill="#94a3b8" font-size="7">60s full cycle &#183; 5-cycle history</text>
+    <!-- 5 mini cycle dots -->
+    <rect x="145" y="52" width="5" height="8" rx="1" fill="#22d3ee"/>
+    <rect x="152" y="52" width="5" height="8" rx="1" fill="#22d3ee"/>
+    <rect x="159" y="52" width="5" height="8" rx="1" fill="#22d3ee"/>
+    <rect x="166" y="52" width="5" height="8" rx="1" fill="#22d3ee"/>
+    <rect x="173" y="52" width="5" height="8" rx="1" fill="#22d3ee"/>
+
+    <!-- Latency Benchmark Box -->
+    <rect x="10" y="84" width="175" height="34" rx="4" fill="url(#inner-panel-grad)" stroke="#1e293b"/>
+    <text x="18" y="96" fill="#e2e8f0" font-size="7.5" font-weight="600">ONNX Inference Latency</text>
+    <rect x="18" y="101" width="52" height="11" rx="2" fill="#0f766e"/>
+    <text x="22" y="109.5" fill="#5eead4" font-size="6.8" font-weight="700">p95 &#8776; 19 ms</text>
+    <text x="76" y="109.5" fill="#94a3b8" font-size="7">SLA: 150 ms [PASS]</text>
+
+    <!-- Multi-Component Classification Target -->
+    <text x="12" y="134" fill="#94a3b8" font-size="7.2">&#10003; Valve: 100% / 90% / 80% / 73%</text>
+    <text x="12" y="146" fill="#94a3b8" font-size="7.2">&#10003; Pump Leakage: None / Weak / Severe</text>
+    <text x="12" y="158" fill="#94a3b8" font-size="7.2">&#10003; Accumulator &amp; Cooler Health</text>
+
+    <!-- Isolation badge -->
+    <circle cx="16" cy="173" r="3" fill="#22c55e"/>
+    <text x="24" y="176" fill="#22c55e" font-size="7">Pure client subscriber &#183; zero write</text>
+  </g>
+
+
+  <!-- CARD 7: HEALTH INDEX (HI) GAUGE (Sweeps 0.95 -> 0.26) -->
+  <g id="card-7" transform="translate(495, 295)">
+    <rect width="195" height="185" rx="10" fill="url(#card-grad)" stroke="#1e293b" stroke-width="1.5"/>
+
+    <!-- Header & Icon -->
+    <circle cx="20" cy="20" r="10" fill="#0369a1" fill-opacity="0.3"/>
+    <path d="M 15 23 A 6 6 0 1 1 25 23 L 20 20 Z" fill="none" stroke="#22d3ee" stroke-width="1.2"/>
+    <text x="36" y="18" fill="#38bdf8" font-size="9.5" font-weight="700" letter-spacing="0.5">07 &#183; HEALTH INDEX</text>
+    <text x="36" y="28" fill="#64748b" font-size="7.5">Degradation Scoring (0 &#8211; 1)</text>
+
+    <!-- Semi-circular Gauge Dial (Radius 44, Center at x=97, y=106) -->
+    <!-- Red Sector (0.0 to 0.50): 180° to 270° (top) -->
+    <path d="M 53 106 A 44 44 0 0 1 97 62" fill="none" stroke="#ef4444" stroke-width="5.5" stroke-linecap="round"/>
+    <!-- Amber Sector (0.50 to 0.70): 270° to 306° -->
+    <path d="M 97 62 A 44 44 0 0 1 122.8 70.4" fill="none" stroke="#f59e0b" stroke-width="5.5"/>
+    <!-- Green Sector (0.70 to 1.00): 306° to 360° -->
+    <path d="M 122.8 70.4 A 44 44 0 0 1 141 106" fill="none" stroke="#22c55e" stroke-width="5.5" stroke-linecap="round"/>
+
+    <!-- Critical 0.50 Threshold Marker Line -->
+    <line x1="97" y1="56" x2="97" y2="64" stroke="#f8fafc" stroke-width="1.5"/>
+    <text x="97" y="53" fill="#f8fafc" font-size="6.5" font-weight="700" text-anchor="middle">THRESHOLD 0.50</text>
+
+    <!-- Gauge Scale Labels -->
+    <text x="50" y="117" fill="#ef4444" font-size="7" font-weight="700" text-anchor="middle">0.0</text>
+    <text x="143" y="117" fill="#22c55e" font-size="7" font-weight="700" text-anchor="middle">1.0</text>
+
+    <!-- Dial Pivot Hub -->
+    <circle cx="97" cy="106" r="4.5" fill="#334155" stroke="#e2e8f0" stroke-width="1.5"/>
+
+    <!-- Animated Gauge Needle (pivoting at 97, 106) -->
+    <!-- Baseline drawn pointing UP (0° = 0.50). Rotates +81° (0.95 Green) to -43.2° (0.26 Red) -->
+    <g transform="rotate(81, 97, 106)">
+      <animateTransform attributeName="transform" type="rotate"
+                        values="81 97 106; 81 97 106; 0 97 106; -43.2 97 106; -43.2 97 106; 81 97 106"
+                        keyTimes="0; 0.58; 0.70; 0.80; 0.94; 1"
+                        dur="12s" repeatCount="indefinite"/>
+      <line x1="97" y1="106" x2="97" y2="67" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round">
+        <animate attributeName="stroke"
+                 values="#22c55e; #22c55e; #f59e0b; #ef4444; #ef4444; #22c55e"
+                 keyTimes="0; 0.58; 0.70; 0.80; 0.94; 1"
+                 dur="12s" repeatCount="indefinite"/>
+      </line>
+      <polygon points="95,74 97,64 99,74" fill="#22c55e">
+        <animate attributeName="fill"
+                 values="#22c55e; #22c55e; #f59e0b; #ef4444; #ef4444; #22c55e"
+                 keyTimes="0; 0.58; 0.70; 0.80; 0.94; 1"
+                 dur="12s" repeatCount="indefinite"/>
+      </polygon>
+    </g>
+
+    <!-- Dynamic Status & HI Value Display (Synchronized) -->
+    <!-- State 1: Healthy 0.95 -->
+    <g>
+      <animate attributeName="opacity" values="1;1;0;0;0;1" keyTimes="0;0.58;0.64;0.94;0.98;1" dur="12s" repeatCount="indefinite"/>
+      <text x="97" y="132" fill="#22c55e" font-size="12" font-weight="700" text-anchor="middle">HI = 0.95</text>
+      <text x="97" y="144" fill="#22c55e" font-size="7.5" font-weight="600" text-anchor="middle">HEALTHY &#183; NOMINAL</text>
+    </g>
+    <!-- State 2: Degrading 0.48 -->
+    <g>
+      <animate attributeName="opacity" values="0;0;1;0;0;0" keyTimes="0;0.62;0.70;0.78;0.94;1" dur="12s" repeatCount="indefinite"/>
+      <text x="97" y="132" fill="#f59e0b" font-size="12" font-weight="700" text-anchor="middle">HI = 0.48</text>
+      <text x="97" y="144" fill="#f59e0b" font-size="7.5" font-weight="600" text-anchor="middle">DEGRADATION WARNING</text>
+    </g>
+    <!-- State 3: Critical 0.26 -->
+    <g>
+      <animate attributeName="opacity" values="0;0;0;1;1;0" keyTimes="0;0.76;0.80;0.94;0.96;1" dur="12s" repeatCount="indefinite"/>
+      <text x="97" y="132" fill="#ef4444" font-size="12" font-weight="700" text-anchor="middle">HI = 0.26</text>
+      <text x="97" y="144" fill="#ef4444" font-size="7.5" font-weight="600" text-anchor="middle">FAULT: VALVE DEGRADATION</text>
+    </g>
+
+    <!-- Trigger condition tag -->
+    <text x="97" y="165" fill="#64748b" font-size="7" text-anchor="middle">CMMS Trigger: Health Index &lt; 0.50</text>
+    <circle cx="28" cy="173" r="2.5" fill="#f59e0b"/>
+    <text x="36" y="176" fill="#94a3b8" font-size="6.8">Automated fault escalation</text>
+  </g>
+
+
+  <!-- CARD 8: ERPNext CMMS (Sliding Work Order Ticket) -->
+  <g id="card-8" transform="translate(720, 295)">
+    <rect width="195" height="185" rx="10" fill="url(#card-grad)" stroke="#1e293b" stroke-width="1.5"/>
+
+    <!-- Header & Icon -->
+    <circle cx="20" cy="20" r="10" fill="#0369a1" fill-opacity="0.3"/>
+    <rect x="15" y="14" width="10" height="12" rx="1.5" fill="none" stroke="#22d3ee" stroke-width="1.2"/>
+    <line x1="18" y1="18" x2="22" y2="18" stroke="#22d3ee" stroke-width="1"/>
+    <line x1="18" y1="21" x2="22" y2="21" stroke="#22d3ee" stroke-width="1"/>
+    <text x="36" y="18" fill="#38bdf8" font-size="9.5" font-weight="700" letter-spacing="0.5">08 &#183; ERPNext CMMS</text>
+    <text x="36" y="28" fill="#64748b" font-size="7.5">Work Order Automation</text>
+
+    <!-- Standby Slot / Ticket Dispenser Header -->
+    <rect x="10" y="44" width="175" height="14" rx="3" fill="#070c18" stroke="#334155" stroke-width="1"/>
+    <text x="97" y="54" fill="#64748b" font-size="7" font-weight="600" text-anchor="middle" letter-spacing="0.5">CMMS DISPATCH PORTAL</text>
+
+    <!-- Resting State Display (When HI >= 0.50) -->
+    <g id="cmms-idle-state">
+      <animate attributeName="opacity" values="1;1;0;0;1" keyTimes="0;0.68;0.74;0.95;1" dur="12s" repeatCount="indefinite"/>
+      <circle cx="97" cy="98" r="16" fill="#0f172a" stroke="#1e293b"/>
+      <path d="M 91 98 L 95 102 L 103 94" fill="none" stroke="#22c55e" stroke-width="1.8"/>
+      <text x="97" y="128" fill="#94a3b8" font-size="8" font-weight="600" text-anchor="middle">STANDBY &#183; SYSTEM NOMINAL</text>
+      <text x="97" y="140" fill="#64748b" font-size="7" text-anchor="middle">No open work orders</text>
+      <text x="97" y="152" fill="#475569" font-size="6.8" text-anchor="middle">Awaiting trigger: HI &lt; 0.50</text>
+    </g>
+
+    <!-- SLIDING WORK ORDER TICKET (When HI < 0.50) -->
+    <!-- Slides out of the dispenser slot when needle sweeps down past 0.50 -->
+    <g clip-path="url(#clip-ticket-slot)">
+      <g id="wo-ticket-card" opacity="0">
+        <animateTransform attributeName="transform" type="translate"
+                          values="0,-112; 0,-112; 0,0; 0,0; 0,-112"
+                          keyTimes="0; 0.70; 0.76; 0.94; 1"
+                          dur="12s" repeatCount="indefinite"/>
+        <animate attributeName="opacity"
+                 values="0; 0; 1; 1; 0"
+                 keyTimes="0; 0.69; 0.75; 0.94; 1"
+                 dur="12s" repeatCount="indefinite"/>
+
+        <!-- Ticket Card Body -->
+        <rect class="alert-ticket-stroke" x="10" y="64" width="175" height="106" rx="6" fill="#0d1527" stroke="#ef4444" stroke-width="1.5"/>
+
+        <!-- Ticket Header Banner -->
+        <path d="M 10 70 Q 10 64 16 64 H 179 Q 185 64 185 70 V 86 H 10 Z" fill="url(#ticket-header-grad)"/>
+
+        <!-- Alert Icon & Title -->
+        <path d="M 20 80 L 24 71 L 28 80 Z" fill="#f59e0b"/>
+        <line x1="24" y1="74" x2="24" y2="77" stroke="#000000" stroke-width="1"/>
+        <circle cx="24" cy="78.5" r="0.6" fill="#000000"/>
+        <text x="33" y="78" fill="#ffffff" font-size="8" font-weight="700">WORK ORDER #4082</text>
+
+        <!-- Priority Pill -->
+        <rect x="138" y="69" width="42" height="12" rx="3" fill="#ef4444"/>
+        <text x="159" y="78" fill="#ffffff" font-size="7" font-weight="bold" text-anchor="middle">HIGH</text>
+
+        <!-- Ticket Details -->
+        <text x="18" y="100" fill="#f8fafc" font-size="7.8" font-weight="700">WO: valve degradation</text>
+        <text x="18" y="112" fill="#fca5a5" font-size="7.2" font-weight="600">Priority: High &#183; State: OPEN</text>
+        <text x="18" y="124" fill="#cbd5e1" font-size="7">Asset: Proportional Valve (V1)</text>
+        <text x="18" y="135" fill="#94a3b8" font-size="6.8">Trigger: HI=0.26 &#183; &#916;t edge lag &gt; 40ms</text>
+        <text x="18" y="146" fill="#94a3b8" font-size="6.8">Action: Replace solenoid valve spool</text>
+
+        <!-- API status footer -->
+        <rect x="15" y="152" width="165" height="13" rx="2" fill="#070c18"/>
+        <text x="19" y="161.5" fill="#38bdf8" font-size="6.5" font-family="monospace">POST /api/resource/Work Order</text>
+      </g>
+    </g>
+
+    <!-- Bottom connection badge -->
+    <circle cx="16" cy="173" r="3" fill="#22c55e"/>
+    <text x="24" y="176" fill="#64748b" font-size="7">CMMS REST API dispatch ready</text>
+  </g>
+
+
+  <!-- ==================== FOOTER ==================== -->
+  <g id="footer" transform="translate(45, 500)">
+    <!-- Security Shield Icon -->
+    <path d="M 5 3 L 13 0 L 21 3 V 10 C 21 15 13 19 13 19 C 13 19 5 15 5 10 Z" fill="#065f46" stroke="#22c55e" stroke-width="1.2"/>
+    <path d="M 9 9.5 L 12 12.5 L 17 7.5" fill="none" stroke="#ffffff" stroke-width="1.4"/>
+
+    <!-- Mandatory Footer Text -->
+    <text x="28" y="13" fill="#94a3b8" font-size="10.5">
+      <tspan fill="#22c55e" font-weight="700">Read-only by design</tspan> &#8212; the advisor never writes to the plant.
+    </text>
+
+    <!-- System Spec Pills (Right) -->
+    <text x="870" y="13" fill="#64748b" font-size="8" text-anchor="end">
+      60s Cycle Assembly &#183; 17 Channels &#183; 19 ms Latency (p95) &#183; CatBoost + 1D-CNN Parity
+    </text>
+  </g>
+</svg>
