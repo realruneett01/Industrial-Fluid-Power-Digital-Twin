@@ -18,6 +18,7 @@ User=hydro
 Group=hydro
 WorkingDirectory=/opt/hydro
 Environment=HYDRO_ROOT=/opt/hydro
+Environment=PYTHONDONTWRITEBYTECODE=1
 Environment=HYDRO_SITE_DIR=/var/lib/hydro/site
 EnvironmentFile=/etc/hydro.env
 StateDirectory=hydro

@@ -27,7 +27,6 @@ EXCLUDED_DIRS = frozenset(
         "certs",
         ".pytest_cache",
         ".ruff_cache",
-        "wheelhouse",
     }
 )
 EXCLUDED_SUFFIXES = (".pyc", ".log", ".tmp")

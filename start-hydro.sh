@@ -14,12 +14,14 @@ export PYTHONDONTWRITEBYTECODE=1   # keep the drive free of .pyc files (they wou
 
 CHECK_ONLY=0
 REPAIR=0
-ARGS=""
-for a in "$@"; do
+# Rotate through the arguments so values containing spaces survive intact.
+n=$#
+while [ "$n" -gt 0 ]; do
+  a=$1; shift; n=$((n - 1))
   case "$a" in
     --check-only) CHECK_ONLY=1 ;;
     --repair) REPAIR=1 ;;
-    *) ARGS="$ARGS $a" ;;
+    *) set -- "$@" "$a" ;;
   esac
 done
 
@@ -62,8 +64,6 @@ if ! "$VENV/bin/python" -c 'import numpy, scipy, pandas, yaml, onnxruntime, asyn
 fi
 
 if [ "$CHECK_ONLY" = 1 ]; then
-  # shellcheck disable=SC2086
-  exec "$VENV/bin/python" -m hydro deploy $ARGS
+  exec "$VENV/bin/python" -m hydro deploy "$@"
 fi
-# shellcheck disable=SC2086
-exec "$VENV/bin/python" -m hydro deploy --start $ARGS
+exec "$VENV/bin/python" -m hydro deploy --start "$@"

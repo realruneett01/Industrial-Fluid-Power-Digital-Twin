@@ -7,6 +7,7 @@ Nothing is started unless every step is PASS or WARN. The full evidence is writt
 from __future__ import annotations
 
 import asyncio
+import contextlib
 import os
 from dataclasses import dataclass
 from datetime import UTC, datetime
@@ -24,6 +25,7 @@ from hydro.deploy.site import (
     default_site_dir,
     write_json_atomic,
 )
+from hydro.online import security
 from hydro.online.replay_server import DEFAULT_ENDPOINT
 
 EXIT_OK, EXIT_GATE_FAILED = 0, 2
@@ -85,7 +87,7 @@ def _pick_source(opts: GateOptions, found: discover.Discovery, steps: list[Check
     return None
 
 
-def _calibrate(opts, kind, endpoint, data_dir, n, steps):
+def _calibrate(opts, kind, endpoint, data_dir, n, steps, previous):
     """Capture cycles from the chosen source and judge them. Returns (baseline, source_label)."""
     try:
         if kind == "live":
@@ -101,6 +103,19 @@ def _calibrate(opts, kind, endpoint, data_dir, n, steps):
                     )
                 )
                 return {}, "live"
+            if not opts.insecure:
+                server_cert = security.cert_pair(opts.cert_dir, "server").cert
+                if not server_cert.is_file():
+                    steps.append(
+                        CheckResult(
+                            "server-certificate",
+                            Status.FAIL,
+                            f"server certificate not found at {server_cert}",
+                            "copy the OPC-UA server's certificate there as server_cert.der "
+                            "(or use --insecure on an isolated lab network)",
+                        )
+                    )
+                    return {}, "live"
             timeout = opts.capture_timeout_s or sources.expected_capture_seconds(n) + 30
             cycles = asyncio.run(
                 sources.grab_from_opcua(
@@ -127,6 +142,8 @@ def _calibrate(opts, kind, endpoint, data_dir, n, steps):
     steps.append(CheckResult("capture", Status.PASS, f"{len(cycles)} complete cycle(s)"))
     results, baseline = calibrate.calibrate_cycles(cycles, opts.strict)
     steps.extend(results)
+    if previous:
+        steps.extend(calibrate.drift_report(previous, cycles[0]))
     return baseline, label
 
 
@@ -165,13 +182,16 @@ def run_gate(opts: GateOptions) -> tuple[int, dict[str, Any]]:
 
     found = asyncio.run(discover.discover(root, [opts.endpoint] if opts.endpoint else None))
     chosen = _pick_source(opts, found, steps)
+    previous: dict[str, Any] = {}
+    with contextlib.suppress(ValueError):  # first run or unreadable old file: nothing to compare
+        previous = calibrate.load_calibration(site_dir / CALIBRATION_FILE)["channels"]
     baseline: dict[str, Any] = {}
     kind, endpoint, data_dir, label = "none", "", None, ""
     if chosen is not None:
         kind, endpoint, data_dir = chosen
         default_n = profile["calibration_cycles"]
         n = opts.calibration_cycles or (min(default_n, 2) if kind == "live" else default_n)
-        baseline, label = _calibrate(opts, kind, endpoint, data_dir, n, steps)
+        baseline, label = _calibrate(opts, kind, endpoint, data_dir, n, steps, previous)
 
     bundle = selfcheck.check_bundle_files(models_dir)
     steps.append(bundle)

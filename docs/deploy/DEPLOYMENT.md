@@ -19,6 +19,8 @@ export HYDRO_OPCUA_USER=...      # Windows: set HYDRO_OPCUA_USER=...
 export HYDRO_OPCUA_PASSWORD=...
 ```
 
+Encrypted sessions (the default) pin the server's certificate: copy it to `site/certs/server_cert.der` before the first run, otherwise the gate fails with a `server-certificate` error. `--insecure` skips encryption and belongs only on an isolated lab network.
+
 ## Build the drive (on the engineering machine)
 
 ```bash
