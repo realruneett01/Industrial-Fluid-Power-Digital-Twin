@@ -15,9 +15,11 @@ from asyncua.crypto import cert_gen
 from asyncua.crypto.security_policies import SecurityPolicyBasic256Sha256
 from cryptography.x509.oid import ExtendedKeyUsageOID
 
+from hydro.paths import project_root
+
 SERVER_URI = "urn:hydro:replay-server"
 CLIENT_URI = "urn:hydro:advisor-client"
-DEFAULT_CERT_DIR = Path(__file__).resolve().parents[3] / "certs"
+DEFAULT_CERT_DIR = project_root() / "certs"
 SUBJECT = {"organizationName": "hydro condition twin"}
 
 

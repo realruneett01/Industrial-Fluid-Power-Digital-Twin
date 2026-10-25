@@ -17,6 +17,9 @@ from catboost import CatBoostClassifier
 from torch import nn
 
 from hydro.models.cnn1d import TARGET_HEADS, MultiRateCNN
+from hydro.models.runtime import _convert_ort_output, inference_session
+
+__all__ = ["_convert_ort_output", "inference_session"]
 
 
 class _CNNExportTupleWrapper(nn.Module):
@@ -166,27 +169,6 @@ def export_models_to_onnx(
         out_path = out_dir / f"{key}.onnx"
         exported_paths.append(_dispatch_single_model(key, value, out_path))
     return exported_paths
-
-
-def inference_session(onnx_path: Path | str) -> ort.InferenceSession:
-    """CPU session with intra-op spinning disabled.
-
-    Spinning worker threads keep cores busy after each run and starve the numpy/scipy
-    feature extraction that runs between inferences (measured p95 156 ms -> 19 ms).
-    """
-    opts = ort.SessionOptions()
-    opts.add_session_config_entry("session.intra_op.allow_spinning", "0")
-    return ort.InferenceSession(str(onnx_path), opts, providers=["CPUExecutionProvider"])
-
-
-def _convert_ort_output(output: Any) -> np.ndarray:
-    """Convert raw ONNX Runtime output (including map sequences) to ndarray."""
-    if isinstance(output, list) and len(output) > 0 and isinstance(output[0], dict):
-        return np.array(
-            [[row[k] for k in sorted(row.keys())] for row in output],
-            dtype=np.float32,
-        )
-    return np.asarray(output)
 
 
 def _compute_output_rel_error(

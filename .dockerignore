@@ -1,0 +1,15 @@
+.git
+.venv
+site
+certs
+data
+__pycache__
+*.pyc
+.pytest_cache
+.ruff_cache
+docs/assets
+reports
+tests
+wheelhouse
+dist-portable
+!models

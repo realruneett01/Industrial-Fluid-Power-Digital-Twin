@@ -14,12 +14,7 @@ from hydro.data.schema import PHYSICAL_CHANNELS
 from hydro.features import build_physics_features
 from hydro.features.physics import fit_valve_baseline
 from hydro.features.stats import extract_statistical_features
-from hydro.models.classical import make_classifier
-from hydro.models.export import (
-    _convert_ort_output,
-    export_catboost_to_onnx,
-    inference_session,
-)
+from hydro.models.runtime import _convert_ort_output, inference_session
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
@@ -70,6 +65,8 @@ def _fit_export_catboost(
     out_path: Path,
 ) -> list[int]:
     """Fit CatBoost classifier, export to ONNX, and return ordered class labels."""
+    from hydro.models.export import export_catboost_to_onnx
+
     clf.fit(x, y)
     export_catboost_to_onnx(clf, x.shape[1], out_path)
     return [int(c) for c in clf.classes_]
@@ -102,6 +99,8 @@ def train_onnx_bundle(
     Path
         Output directory path containing exported artifacts.
     """
+    from hydro.models.classical import make_classifier
+
     target_dir = Path(out_dir)
     target_dir.mkdir(parents=True, exist_ok=True)
     train_data = {k: v[train_idx] for k, v in data.items()}
@@ -224,7 +223,9 @@ class OnnxCyclePredictor:
         return results
 
 
-def _from_dir(cls: type[OnnxCyclePredictor], path: Path | str) -> OnnxCyclePredictor:
+def _from_dir(
+    cls: type[OnnxCyclePredictor], path: Path | str, intra_op_threads: int = 0
+) -> OnnxCyclePredictor:
     """Instantiate predictor from directory containing bundle.json and ONNX models."""
     bundle_dir = Path(path)
     bundle_file = bundle_dir / "bundle.json"
@@ -237,7 +238,9 @@ def _from_dir(cls: type[OnnxCyclePredictor], path: Path | str) -> OnnxCyclePredi
         meta.get("classes") or meta.get("labels") or {t: meta[t] for t in TARGETS if t in meta}
     )
     classes = {t: np.asarray(classes_raw[t]) for t in TARGETS}
-    sessions = {t: inference_session(bundle_dir / f"catboost_{t}.onnx") for t in TARGETS}
+    sessions = {
+        t: inference_session(bundle_dir / f"catboost_{t}.onnx", intra_op_threads) for t in TARGETS
+    }
     return cls(valve_baseline_s=baseline, classes=classes, sessions=sessions)
 
 

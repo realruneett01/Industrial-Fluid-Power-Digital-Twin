@@ -9,7 +9,9 @@ from pathlib import Path
 
 import yaml
 
-REPO_ROOT = Path(__file__).resolve().parents[2]
+from hydro.paths import project_root
+
+REPO_ROOT = project_root()
 
 
 def _load_config(path: str) -> dict:
@@ -119,6 +121,96 @@ def cmd_cmms_setup(args: argparse.Namespace) -> int:
         return 1
 
 
+def _site_dir(args: argparse.Namespace) -> Path:
+    from hydro.deploy.site import default_site_dir
+
+    return Path(args.site_dir) if args.site_dir else default_site_dir(REPO_ROOT)
+
+
+def cmd_doctor(args: argparse.Namespace) -> int:
+    from hydro.deploy.doctor import run_doctor
+    from hydro.deploy.results import Status, render, worst
+
+    results = run_doctor(_site_dir(args))
+    print(render(results))
+    return 2 if worst(results) == Status.FAIL else 0
+
+
+def cmd_discover(args: argparse.Namespace) -> int:
+    import asyncio
+    import json
+
+    from hydro.deploy.discover import discover
+
+    found = asyncio.run(discover(REPO_ROOT, [args.endpoint] if args.endpoint else None))
+    print(json.dumps(found.to_dict(), indent=2))
+    return 0
+
+
+def cmd_deploy(args: argparse.Namespace) -> int:
+    import asyncio
+
+    from hydro.deploy.gate import GateOptions, run_gate
+
+    opts = GateOptions(
+        root=REPO_ROOT,
+        models_dir=Path(args.models_dir) if args.models_dir else None,
+        site_dir=Path(args.site_dir) if args.site_dir else None,
+        mode=args.mode,
+        endpoint=args.endpoint,
+        data_dir=Path(args.data_dir) if args.data_dir else None,
+        insecure=args.insecure,
+        strict=args.strict,
+        calibration_cycles=args.calibration_cycles,
+        toolchain=args.toolchain,
+        replay_speed=args.replay_speed,
+    )
+    try:
+        code, report = run_gate(opts)
+    except ValueError as err:
+        print(f"hydro deploy: {err}")
+        return 1
+    print(report["text"])
+    print(f"\nVERDICT: {report['verdict']} (gate {'passed' if code == 0 else 'FAILED'})")
+    if code != 0 or not args.start:
+        return code
+    from hydro.deploy.service import serve
+
+    return asyncio.run(serve(_site_dir(args)))
+
+
+def cmd_run(args: argparse.Namespace) -> int:
+    import asyncio
+
+    from hydro.deploy.service import serve
+
+    try:
+        return asyncio.run(serve(_site_dir(args), args.duration_sec))
+    except ValueError as err:
+        print(f"hydro run: {err}")
+        return 1
+
+
+def cmd_health(args: argparse.Namespace) -> int:
+    from hydro.deploy.service import health
+
+    ok, msg = health(_site_dir(args), args.max_age)
+    print(msg)
+    return 0 if ok else 1
+
+
+def cmd_manifest(args: argparse.Namespace) -> int:
+    from hydro.deploy import manifest
+
+    key = os.environ.get(manifest.KEY_ENV)
+    if args.action == "build":
+        print(manifest.write_manifest(REPO_ROOT, key))
+        return 0
+    result = manifest.verify_manifest(REPO_ROOT, key)
+    print({k: v for k, v in result.items() if v or k == "ok"})
+    return 0 if result["ok"] else 2
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="hydro")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -146,6 +238,37 @@ def build_parser() -> argparse.ArgumentParser:
         "--url", default=os.environ.get("ERPNEXT_URL"), help="ERPNext URL (default: ERPNEXT_URL)"
     )
     cs.set_defaults(func=cmd_cmms_setup)
+    site_kw = {"default": None, "help": "site folder (default: <root>/site or $HYDRO_SITE_DIR)"}
+    dr = sub.add_parser("doctor", help="check this machine can run hydro")
+    dr.add_argument("--site-dir", **site_kw)
+    dr.set_defaults(func=cmd_doctor)
+    dc = sub.add_parser("discover", help="list reachable sensor sources")
+    dc.add_argument("--endpoint", default=None)
+    dc.set_defaults(func=cmd_discover)
+    dp = sub.add_parser("deploy", help="preflight, calibrate, self-check; optionally start")
+    dp.add_argument("--mode", choices=["auto", "live", "replay"], default="auto")
+    dp.add_argument("--endpoint", default=None)
+    dp.add_argument("--data-dir", default=None)
+    dp.add_argument("--models-dir", default=None)
+    dp.add_argument("--site-dir", **site_kw)
+    dp.add_argument("--insecure", action="store_true", help="unencrypted OPC-UA (lab only)")
+    dp.add_argument("--strict", action="store_true", help="treat sensor warnings as failures")
+    dp.add_argument("--calibration-cycles", type=int, default=None)
+    dp.add_argument("--replay-speed", type=float, default=1.0, help="replay mode only")
+    dp.add_argument("--toolchain", action="store_true", help="also train/export a smoke bundle")
+    dp.add_argument("--start", action="store_true", help="start the service if the gate passes")
+    dp.set_defaults(func=cmd_deploy)
+    rn = sub.add_parser("run", help="start the service from a passed deployment")
+    rn.add_argument("--site-dir", **site_kw)
+    rn.add_argument("--duration-sec", type=float, default=0.0, help="0 = run until stopped")
+    rn.set_defaults(func=cmd_run)
+    hl = sub.add_parser("health", help="exit 0 when the running service heartbeat is fresh")
+    hl.add_argument("--site-dir", **site_kw)
+    hl.add_argument("--max-age", type=float, default=120.0)
+    hl.set_defaults(func=cmd_health)
+    mf = sub.add_parser("manifest", help="build or verify the drive integrity manifest")
+    mf.add_argument("action", choices=["build", "verify"])
+    mf.set_defaults(func=cmd_manifest)
     return parser
 
 

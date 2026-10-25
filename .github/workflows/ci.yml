@@ -1,0 +1,114 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: test (${{ matrix.os }}, py${{ matrix.python }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, ubuntu-24.04-arm, windows-latest]
+        python: ["3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Install (CPU-only PyTorch on Linux to keep the download small)
+        shell: bash
+        run: |
+          python -m pip install --upgrade pip
+          if [ "$RUNNER_OS" = "Linux" ]; then
+            pip install torch --index-url https://download.pytorch.org/whl/cpu
+          fi
+          pip install -e ".[dev]"
+      - name: Lint
+        run: ruff check . && ruff format --check .
+      - name: Tests
+        run: pytest -q -p no:cacheprovider
+
+  runtime-only:
+    # Proves the deployed runtime works WITHOUT the training stack, on every platform.
+    name: runtime-only (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, ubuntu-24.04-arm, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -e .
+      - name: Training libraries must be absent
+        shell: python
+        run: |
+          import importlib.util as u, sys
+          bad = [m for m in ("torch", "catboost", "sklearn") if u.find_spec(m)]
+          sys.exit(f"unexpected training libs installed: {bad}" if bad else 0)
+      - name: Doctor
+        run: hydro doctor
+      - name: Gate must fail closed with no sensors and no models (exit code 2)
+        shell: bash
+        run: |
+          set +e
+          hydro deploy
+          code=$?
+          echo "exit code: $code"
+          test "$code" = "2"
+      - name: Launcher (POSIX)
+        if: runner.os != 'Windows'
+        shell: bash
+        run: |
+          set +e
+          ./start-hydro.sh --check-only
+          code=$?
+          echo "exit code: $code"
+          test "$code" = "2"
+      - name: Launcher (Windows)
+        if: runner.os == 'Windows'
+        shell: cmd
+        run: |
+          call Start-Hydro.bat --check-only
+          echo exit code: %ERRORLEVEL%
+          if not "%ERRORLEVEL%"=="2" exit /b 1
+
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Build a smoke model bundle (synthetic; never for diagnosis)
+        run: |
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+          pip install -e ".[train]"
+          python -c "from pathlib import Path; from hydro.deploy.selfcheck import toolchain_bundle; toolchain_bundle(Path('models/online'))"
+      - run: docker build -t hydro:ci .
+      - name: Container gate fails closed with no sensors (exit code 2)
+        run: |
+          set +e
+          docker run --rm hydro:ci deploy
+          code=$?
+          echo "exit code: $code"
+          test "$code" = "2"
+
+  systemd-unit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Static verification of the unit file
+        run: |
+          out=$(systemd-analyze verify deploy/hydro.service 2>&1 || true)
+          echo "$out"
+          # the only acceptable complaint is the binary not existing on the CI runner
+          ! echo "$out" | grep -v "is not executable" | grep -E "hydro.service|Unknown|Failed|Invalid"

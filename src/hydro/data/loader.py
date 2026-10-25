@@ -6,8 +6,6 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
-import pyarrow as pa
-import pyarrow.parquet as pq
 
 from hydro.data.schema import CHANNEL_REGISTRY, TARGET_COLUMNS
 
@@ -92,6 +90,9 @@ def _write_rate_parquet(
     out_file: Path,
 ) -> None:
     """Write fixed-size list array columns for all channels at a given sampling rate."""
+    import pyarrow as pa
+    import pyarrow.parquet as pq
+
     col_arrays: list[pa.FixedSizeListArray] = []
     col_names: list[str] = []
     for name, ch in CHANNEL_REGISTRY.items():

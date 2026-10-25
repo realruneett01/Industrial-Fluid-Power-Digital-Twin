@@ -38,3 +38,8 @@ desktop.ini
 
 # OPC-UA application certificates and private keys (generated locally)
 /certs/
+
+# Deployment output generated on the target machine (credentials, calibration, reports)
+/site/
+/wheelhouse/
+/dist-portable/

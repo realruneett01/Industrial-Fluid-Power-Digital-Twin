@@ -4,26 +4,36 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "hydro"
-version = "0.1.0"
+version = "0.2.0"
 description = "Level-2 condition monitoring and grey-box diagnostics for the ZeMA hydraulic test stand (UCI 447)"
 requires-python = ">=3.12"
-license = { text = "AGPL-3.0-or-later" }
+license = { text = "LicenseRef-Proprietary" }
+classifiers = [
+    "License :: Other/Proprietary License",
+    "Private :: Do Not Upload",
+]
 dependencies = [
     "numpy>=2.2",
     "scipy>=1.15",
     "pandas>=2.2",
-    "pyarrow>=17",
     "pyyaml>=6",
-    "scikit-learn>=1.6",
-    "catboost>=1.2.7",
-    "torch>=2.6",
-    "onnx>=1.17",
     "onnxruntime>=1.21",
     "asyncua>=1.1",
 ]
 
 [project.optional-dependencies]
-dev = ["pytest>=8.3", "ruff>=0.8"]
+# Needed only to train, export and benchmark models; the deployed runtime does not need them.
+train = [
+    "pyarrow>=17",
+    "scikit-learn>=1.6",
+    "catboost>=1.2.7",
+    "torch>=2.6",
+    "onnx>=1.17",
+]
+dev = ["hydro[train]", "pytest>=8.3", "ruff>=0.8"]
+
+[project.scripts]
+hydro = "hydro.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

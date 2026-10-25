@@ -1,0 +1,50 @@
+# systemd unit. Install:
+#   sudo useradd --system --home /opt/hydro hydro
+#   sudo cp -r <drive>/. /opt/hydro && sudo chown -R hydro: /opt/hydro
+#   sudo python3 -m venv /opt/hydro/venv && sudo /opt/hydro/venv/bin/pip install /opt/hydro
+#   sudo cp /opt/hydro/deploy/hydro.service /etc/systemd/system/
+#   sudo cp /opt/hydro/deploy/hydro.env.example /etc/hydro.env && sudo chmod 600 /etc/hydro.env
+#   sudo systemctl daemon-reload && sudo systemctl enable --now hydro
+[Unit]
+Description=Hydraulic condition monitoring digital twin (hydro)
+After=network-online.target
+Wants=network-online.target
+StartLimitIntervalSec=300
+StartLimitBurst=5
+
+[Service]
+Type=simple
+User=hydro
+Group=hydro
+WorkingDirectory=/opt/hydro
+Environment=HYDRO_ROOT=/opt/hydro
+Environment=HYDRO_SITE_DIR=/var/lib/hydro/site
+EnvironmentFile=/etc/hydro.env
+StateDirectory=hydro
+# Gate first, then the supervised service; a failed gate exits 2 and is not restarted blindly.
+ExecStartPre=/opt/hydro/venv/bin/hydro deploy
+ExecStart=/opt/hydro/venv/bin/hydro run
+TimeoutStartSec=900
+Restart=on-failure
+RestartSec=10
+# Do not loop forever on a gate that keeps failing (exit 2 = gate failed).
+RestartPreventExitStatus=2 3
+
+# Hardening: the service needs only its own state directory and the network.
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+RestrictNamespaces=true
+LockPersonality=true
+MemoryDenyWriteExecute=false
+ReadWritePaths=/var/lib/hydro
+ReadOnlyPaths=/opt/hydro
+
+[Install]
+WantedBy=multi-user.target

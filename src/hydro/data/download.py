@@ -12,9 +12,10 @@ from pathlib import Path
 import yaml
 
 from hydro.data.schema import CHANNEL_REGISTRY
+from hydro.paths import project_root
 
 CHUNK_SIZE = 1024 * 1024  # 1 MiB streaming buffer
-CONFIG_PATH = Path(__file__).resolve().parents[3] / "configs" / "data.yaml"
+CONFIG_PATH = project_root() / "configs" / "data.yaml"
 
 
 def _load_defaults() -> tuple[str, str]:

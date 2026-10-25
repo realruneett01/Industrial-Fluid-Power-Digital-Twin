@@ -3,10 +3,11 @@
 from __future__ import annotations
 
 from functools import lru_cache
-from pathlib import Path
 
 import numpy as np
 import yaml
+
+from hydro.paths import project_root
 
 
 def calibrate_walther(
@@ -54,7 +55,7 @@ def walther_viscosity(temp_c: np.ndarray, a: float, b: float) -> np.ndarray:
 @lru_cache(maxsize=1)
 def _load_default_walther_params() -> tuple[float, float]:
     """Load reference oil parameters from configs/oil_vg46.yaml and calibrate Walther."""
-    config_path = Path(__file__).resolve().parents[3] / "configs" / "oil_vg46.yaml"
+    config_path = project_root() / "configs" / "oil_vg46.yaml"
     with config_path.open("r", encoding="utf-8") as f:
         cfg = yaml.safe_load(f)
     return calibrate_walther(

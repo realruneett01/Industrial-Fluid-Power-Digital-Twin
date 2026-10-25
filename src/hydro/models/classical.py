@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import functools
 import logging
-from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 import catboost.utils
@@ -19,6 +18,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import RobustScaler
 
 from hydro.eval.metrics import evaluate_classification_targets
+from hydro.paths import project_root
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
@@ -53,7 +53,7 @@ def load_model_config() -> dict[str, Any]:
     dict[str, Any]
         Configuration mapping loaded from YAML file.
     """
-    config_path = Path(__file__).resolve().parents[3] / "configs" / "model.yaml"
+    config_path = project_root() / "configs" / "model.yaml"
     with config_path.open("r", encoding="utf-8") as f:
         return yaml.safe_load(f)
 
